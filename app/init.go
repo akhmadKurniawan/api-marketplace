@@ -1,4 +1,4 @@
-package models
+package app
 
 import (
 	"fmt"
@@ -39,6 +39,8 @@ func DBInit() *gorm.DB {
 	sqlDB.SetConnMaxLifetime(time.Minute * 5)
 	sqlDB.SetMaxIdleConns(0)
 	sqlDB.SetMaxOpenConns(5)
+
+	fmt.Println(dbName)
 
 	dB = db
 	return dB
