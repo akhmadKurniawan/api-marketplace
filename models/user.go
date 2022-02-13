@@ -8,4 +8,5 @@ type User struct {
 	Password    string    `json:"password" db:"password"`
 	Role        int       `json:"role" db:"role"`
 	LastLoginAt time.Time `json:"last_login_at" db:"last_login_at"`
+	UserToken   UserToken `json:"token"`
 }

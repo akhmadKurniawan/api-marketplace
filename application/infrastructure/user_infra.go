@@ -6,5 +6,7 @@ import (
 )
 
 type UserRepository interface {
-	SignUpUser(ctx context.Context, user models.User) error
+	SignUpUser(context.Context, models.User) error
+	GetUserID(ctx context.Context, id string) (models.User, error)
+	GetUsername(context.Context, string) (models.User, error)
 }

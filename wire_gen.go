@@ -7,6 +7,7 @@
 package main
 
 import (
+	"app/application/use_case/login"
 	"app/application/use_case/user/create_user"
 	"app/repository"
 	"gorm.io/gorm"
@@ -19,4 +20,12 @@ func CreateUserHandler(db *gorm.DB) create_user.CreateUserHandler {
 	createUserService := create_user.NewCreateUserService(userRepository)
 	createUserHandler := create_user.NewCreateUserHandler(createUserService)
 	return createUserHandler
+}
+
+func LoginHandler(db *gorm.DB) login.LoginHandler {
+	loginRepository := repository.NewLoginRepository(db)
+	userRepository := repository.NewUserRepository(db)
+	loginService := login.NewLoginService(loginRepository, userRepository)
+	loginHandler := login.NewLoginHandler(loginService)
+	return loginHandler
 }
