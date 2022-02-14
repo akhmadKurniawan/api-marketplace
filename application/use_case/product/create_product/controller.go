@@ -22,7 +22,7 @@ func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 	req := CreateProductRequest{}
 	ctx := c.Request.Context()
 
-	if err := c.Bind(&req); err != nil {
+	if err := c.ShouldBind(&req); err != nil {
 		log.Fatal("Controller - CreateProduct error while binding request : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return

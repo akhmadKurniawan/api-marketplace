@@ -7,15 +7,16 @@
 package main
 
 import (
+	"app/application/infrastructure/repository"
 	"app/application/use_case/costumer/create_costumer"
 	"app/application/use_case/login"
 	"app/application/use_case/product/create_product"
 	"app/application/use_case/product_type/create_product_type"
 	"app/application/use_case/seller/create_seller"
 	"app/application/use_case/seller/delete_seller"
+	"app/application/use_case/shop/create_shop"
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
-	"app/repository"
 	"gorm.io/gorm"
 )
 
@@ -59,8 +60,7 @@ func DeleteSellerHandler(db *gorm.DB) delete_seller.DeleteSellerHandler {
 
 func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
 	costumerRepository := repository.NewCostumerRepository(db)
-	userRepository := repository.NewUserRepository(db)
-	createCostumerService := create_costumer.NewCreateCostumerService(costumerRepository, userRepository)
+	createCostumerService := create_costumer.NewCreateCostumerService(costumerRepository)
 	createCostumerHandler := create_costumer.NewCreateCostumerHandler(createCostumerService)
 	return createCostumerHandler
 }
@@ -77,4 +77,11 @@ func CreateProductTypeHandler(db *gorm.DB) create_product_type.CreateProductType
 	createProductTypeService := create_product_type.NewCreateProductTypeService(productTypeRepository)
 	createProductTypeHandler := create_product_type.NewCreateProductTypeHandler(createProductTypeService)
 	return createProductTypeHandler
+}
+
+func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
+	shopRepository := repository.NewShopRepository(db)
+	createShopService := create_shop.NewCreateShopService(shopRepository)
+	createShopHandler := create_shop.NewCreateShopHandler(createShopService)
+	return createShopHandler
 }

@@ -4,15 +4,16 @@
 package main
 
 import (
+	"app/application/infrastructure/repository"
 	"app/application/use_case/costumer/create_costumer"
 	"app/application/use_case/login"
 	"app/application/use_case/product/create_product"
 	"app/application/use_case/product_type/create_product_type"
 	"app/application/use_case/seller/create_seller"
 	"app/application/use_case/seller/delete_seller"
+	"app/application/use_case/shop/create_shop"
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
-	"app/repository"
 
 	"github.com/google/wire"
 	"gorm.io/gorm"
@@ -44,7 +45,7 @@ func DeleteSellerHandler(db *gorm.DB) delete_seller.DeleteSellerHandler {
 }
 
 func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
-	wire.Build(create_costumer.NewCreateCostumerHandler, create_costumer.NewCreateCostumerService, repository.NewCostumerRepository, repository.NewUserRepository)
+	wire.Build(create_costumer.NewCreateCostumerHandler, create_costumer.NewCreateCostumerService, repository.NewCostumerRepository)
 	return create_costumer.CreateCostumerHandler{}
 }
 
@@ -56,4 +57,9 @@ func CreateProductHandler(db *gorm.DB) create_product.CreateProductHandler {
 func CreateProductTypeHandler(db *gorm.DB) create_product_type.CreateProductTypeHandler {
 	wire.Build(create_product_type.NewCreateProductTypeHandler, create_product_type.NewCreateProductTypeService, repository.NewProductTypeRepository)
 	return create_product_type.CreateProductTypeHandler{}
+}
+
+func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
+	wire.Build(create_shop.NewCreateShopHandler, create_shop.NewCreateShopService, repository.NewShopRepository)
+	return create_shop.CreateShopHandler{}
 }
