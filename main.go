@@ -27,6 +27,7 @@ func main() {
 	LoginRoutes(v1, db)
 	SellerRoutes(v1, db)
 	CostumerRoutes(v1, db)
+	ProductTypeRoutes(v1, db)
 	ProductRoutes(v1, db)
 
 	env := godotenv.Load()
@@ -88,5 +89,14 @@ func ProductRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	v1 := route.Group("/products")
 	{
 		v1.POST("", crHandler.CreateProduct)
+	}
+}
+
+func ProductTypeRoutes(route *gin.RouterGroup, db *gorm.DB) {
+	crHandler := CreateProductTypeHandler(db)
+
+	v1 := route.Group("/product_types")
+	{
+		v1.POST("", crHandler.CreateProductType)
 	}
 }

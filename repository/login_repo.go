@@ -22,10 +22,9 @@ func NewLoginRepository(DB *gorm.DB) infrastructure.LoginRepository {
 func (p *loginRepository) Login(ctx context.Context, accessToken models.UserToken, userID int) (models.UserToken, error) {
 	accToken := models.UserToken{}
 	user := models.User{}
-	userData := models.User{}
 	user.LastLoginAt = time.Now()
 
-	errUpUser := p.DB.Model(&userData).Where("id = ?", userID).Updates(&user).Error
+	errUpUser := p.DB.Model(&user).Where("id = ?", userID).Updates(&user).Error
 	if errUpUser != nil {
 		return accessToken, errUpUser
 	}
