@@ -9,6 +9,7 @@ package main
 import (
 	"app/application/use_case/costumer/create_costumer"
 	"app/application/use_case/login"
+	"app/application/use_case/product/create_product"
 	"app/application/use_case/seller/create_seller"
 	"app/application/use_case/seller/delete_seller"
 	"app/application/use_case/user/create_user"
@@ -60,4 +61,11 @@ func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
 	createCostumerService := create_costumer.NewCreateCostumerService(costumerRepository)
 	createCostumerHandler := create_costumer.NewCreateCostumerHandler(createCostumerService)
 	return createCostumerHandler
+}
+
+func CreateProductHandler(db *gorm.DB) create_product.CreateProductHandler {
+	productRepository := repository.NewProductRepository(db)
+	createProductService := create_product.NewCreateProductService(productRepository)
+	createProductHandler := create_product.NewCreateProductHandler(createProductService)
+	return createProductHandler
 }
