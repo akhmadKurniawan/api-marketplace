@@ -22,9 +22,9 @@ func ValidateRequest(req *CreateSellerRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateSellerRequest) models.Seller {
+func RequestMapper(req CreateSellerRequest, userID int) models.Seller {
 	return models.Seller{
-		UserID: req.UserID,
+		UserID: userID,
 		Name:   req.Name,
 		Alamat: req.Alamat,
 		NoHp:   req.NoHp,

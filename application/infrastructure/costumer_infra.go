@@ -6,5 +6,5 @@ import (
 )
 
 type CostumerRepository interface {
-	CreateCostumer(context.Context, models.Costumer) error
+	CreateCostumer(context.Context, models.Costumer, int) error
 }

@@ -44,7 +44,7 @@ func DeleteSellerHandler(db *gorm.DB) delete_seller.DeleteSellerHandler {
 }
 
 func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
-	wire.Build(create_costumer.NewCreateCostumerHandler, create_costumer.NewCreateCostumerService, repository.NewCostumerRepository)
+	wire.Build(create_costumer.NewCreateCostumerHandler, create_costumer.NewCreateCostumerService, repository.NewCostumerRepository, repository.NewUserRepository)
 	return create_costumer.CreateCostumerHandler{}
 }
 

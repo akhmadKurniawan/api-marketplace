@@ -12,9 +12,9 @@ import (
 )
 
 type Token struct {
-	UserID uint64
+	UserID int64
 	Name   string
-	Role   int
+	Role   int64
 	jwt.StandardClaims
 }
 
@@ -77,13 +77,12 @@ func AuthenticationRequired() gin.HandlerFunc {
 
 		// Check token
 		if err = app.GetDB().Table("user_tokens").Select("token").Where(&models.UserToken{Token: tokenPart}).First(&accToken).Error; err != nil {
-			fmt.Println(err)
 			c.JSON(403, response.SetMessage("Session login Anda berubah. Silakan lakukan login ulang", false))
 			c.Abort()
 			return
 		}
 
-		if tk.Role == 2 && strings.HasPrefix(requestPath, "/api/v1/manager") {
+		if tk.Role == 2 && strings.HasPrefix(requestPath, "/api/v1/admin") {
 			c.JSON(403, response.SetMessage("You are not allowed acceess this route", false))
 			c.Abort()
 			return

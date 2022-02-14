@@ -46,7 +46,6 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	if err != nil {
 		log.Fatal("Service - SignedToken error : ", err)
 	}
-
 	_, errLogin := s.loginRepository.Login(ctx, RequestMapper(user.ID, signed), user.ID)
 	if errLogin != nil {
 		log.Fatal("Service - LoginUser error : ", errLogin)

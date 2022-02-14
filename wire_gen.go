@@ -59,7 +59,8 @@ func DeleteSellerHandler(db *gorm.DB) delete_seller.DeleteSellerHandler {
 
 func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
 	costumerRepository := repository.NewCostumerRepository(db)
-	createCostumerService := create_costumer.NewCreateCostumerService(costumerRepository)
+	userRepository := repository.NewUserRepository(db)
+	createCostumerService := create_costumer.NewCreateCostumerService(costumerRepository, userRepository)
 	createCostumerHandler := create_costumer.NewCreateCostumerHandler(createCostumerService)
 	return createCostumerHandler
 }

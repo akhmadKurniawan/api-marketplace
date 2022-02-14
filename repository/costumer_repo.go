@@ -18,12 +18,15 @@ func NewCostumerRepository(db *gorm.DB) infrastructure.CostumerRepository {
 	}
 }
 
-func (repo *CostumerRepository) CreateCostumer(ctx context.Context, costumer models.Costumer) error {
+func (repo *CostumerRepository) CreateCostumer(ctx context.Context, costumer models.Costumer, userID int) error {
 	db := repo.DB
 
-	errCreate := db.Create(&costumer).Error
-	if errCreate != nil {
-		return errCreate
+	userId := db.Where("user_id = ?", userID).First(&costumer).Error
+	if userId != nil {
+		errCreate := db.Create(&costumer).Error
+		if errCreate != nil {
+			return errCreate
+		}
 	}
 
 	return nil

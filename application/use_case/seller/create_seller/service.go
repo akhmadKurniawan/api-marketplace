@@ -16,8 +16,8 @@ func NewCreateSellerService(sellerRepo infrastructure.SellerRepository) CreateSe
 	}
 }
 
-func (s *CreateSellerService) CreateSeller(ctx context.Context, req CreateSellerRequest) error {
-	errCreate := s.sellerRepository.CreateSeller(ctx, RequestMapper(req))
+func (s *CreateSellerService) CreateSeller(ctx context.Context, req CreateSellerRequest, userID int) error {
+	errCreate := s.sellerRepository.CreateSeller(ctx, RequestMapper(req, userID))
 	if errCreate != nil {
 		log.Fatal("Service - CreateSeller error : ", errCreate)
 	}

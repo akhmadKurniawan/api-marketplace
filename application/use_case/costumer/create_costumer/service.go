@@ -2,10 +2,9 @@ package create_costumer
 
 import (
 	"app/application/infrastructure"
-	"app/models"
 	"context"
+	"fmt"
 	"log"
-	"strconv"
 )
 
 type CreateCostumerService struct {
@@ -21,25 +20,17 @@ func NewCreateCostumerService(costumerRepo infrastructure.CostumerRepository, us
 }
 
 func (s *CreateCostumerService) CreateCostumer(ctx context.Context, req CreateCostumerRequest) error {
-	// // get username
-	// user, errUser := s.userRepository.GetUsername(ctx, req.Data.Username)
-	// if errUser != nil {
-	// 	log.Fatal("Service - Login error while access username : ", errUser)
-	// }
-
-	user := models.User{}
-
-	errCreate := s.costumerRepository.CreateCostumer(ctx, RequestMapper(req))
-	if errCreate != nil {
-		log.Fatal("Service - CreateCostumer error : ", errCreate)
-	}
-
-	userId := strconv.FormatInt(int64(user.ID), 10)
 
 	//Get user By Id
-	_, errGetUser := s.userRepository.GetUserID(ctx, userId)
+	user, errGetUser := s.userRepository.GetUserID(ctx, req.UserID)
 	if errGetUser != nil {
 		log.Fatal("Service - GetUserId error : ", errGetUser)
+	}
+	fmt.Println(user.ID)
+
+	errCreate := s.costumerRepository.CreateCostumer(ctx, RequestMapper(req, user.ID), user.ID)
+	if errCreate != nil {
+		log.Fatal("Service - CreateCostumer error : ", errCreate)
 	}
 
 	return nil
