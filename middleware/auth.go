@@ -26,7 +26,7 @@ func AuthenticationRequired() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		notAuth := []string{
-			"/api/v1/user/create",
+			"/api/v1/users",
 			"/api/v1/login",
 		} //List of endpoints that doesn't require auth
 		requestPath := c.Request.URL.Path //current request path

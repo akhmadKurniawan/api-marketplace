@@ -10,7 +10,7 @@ type CreateSellerRequest struct {
 	UserID int    `json:"user_id"`
 	Name   string `json:"name" validate:"required"`
 	Alamat string `json:"alamat" validate:"required"`
-	NoHp   int    `json:"no_hp" validate:"required"`
+	NoHp   string `json:"no_hp" validate:"required"`
 }
 
 func ValidateRequest(req *CreateSellerRequest) (bool, error) {

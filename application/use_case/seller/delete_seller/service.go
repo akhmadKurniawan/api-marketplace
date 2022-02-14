@@ -8,7 +8,6 @@ import (
 
 type DeleteSellerService struct {
 	sellerRepository infrastructure.SellerRepository
-	// sellerRepository infrastructure.SellerRepository
 }
 
 func NewDeleteSellerService(sellerRepo infrastructure.SellerRepository) DeleteSellerService {
