@@ -8,7 +8,10 @@ package main
 
 import (
 	"app/application/use_case/login"
+	"app/application/use_case/seller/create_seller"
+	"app/application/use_case/seller/delete_seller"
 	"app/application/use_case/user/create_user"
+	"app/application/use_case/user/delete_user"
 	"app/repository"
 	"gorm.io/gorm"
 )
@@ -22,10 +25,31 @@ func CreateUserHandler(db *gorm.DB) create_user.CreateUserHandler {
 	return createUserHandler
 }
 
+func DeleteUserHandler(db *gorm.DB) delete_user.DeleteUserHandler {
+	userRepository := repository.NewUserRepository(db)
+	deleteUserService := delete_user.NewDeleteUserService(userRepository)
+	deleteUserHandler := delete_user.NewDeleteUserHandler(deleteUserService)
+	return deleteUserHandler
+}
+
 func LoginHandler(db *gorm.DB) login.LoginHandler {
 	loginRepository := repository.NewLoginRepository(db)
 	userRepository := repository.NewUserRepository(db)
 	loginService := login.NewLoginService(loginRepository, userRepository)
 	loginHandler := login.NewLoginHandler(loginService)
 	return loginHandler
+}
+
+func CreateSellerHandler(db *gorm.DB) create_seller.CreateSellerHandler {
+	sellerRepository := repository.NewSellerRepository(db)
+	createSellerService := create_seller.NewCreateSellerService(sellerRepository)
+	createSellerHandler := create_seller.NewCreateSellerHandler(createSellerService)
+	return createSellerHandler
+}
+
+func DeleteSellerHandler(db *gorm.DB) delete_seller.DeleteSellerHandler {
+	sellerRepository := repository.NewSellerRepository(db)
+	deleteSellerService := delete_seller.NewDeleteSellerService(sellerRepository)
+	deleteSellerHandler := delete_seller.NewDeleteSellerHandler(deleteSellerService)
+	return deleteSellerHandler
 }

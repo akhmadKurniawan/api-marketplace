@@ -2,8 +2,8 @@ package models
 
 type Seller struct {
 	Model
-	UserID User
-	Name   string `json:"name"`
-	Almat  string `json:"alamt"`
-	NoHp   int    `json:"no_hp"`
+	UserID int    `json:"user_id" db:"user_id" `
+	Name   string `json:"name" db:"name"`
+	Alamat string `json:"alamt" db:"alamat"`
+	NoHp   int    `json:"no_hp" db:"no_hp"`
 }

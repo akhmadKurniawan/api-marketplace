@@ -25,6 +25,7 @@ func main() {
 
 	UserRoutes(v1, db)
 	LoginRoutes(v1, db)
+	SellerRoutes(v1, db)
 
 	env := godotenv.Load()
 	if env != nil {
@@ -41,10 +42,23 @@ func main() {
 
 func UserRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	crHandler := CreateUserHandler(db)
+	dlHandler := DeleteUserHandler(db)
 
-	v1 := route.Group("/user/create")
+	v1 := route.Group("/users")
 	{
 		v1.POST("", crHandler.CreateUser)
+		v1.DELETE("/:id", dlHandler.DeleteUser)
+	}
+}
+
+func SellerRoutes(route *gin.RouterGroup, db *gorm.DB) {
+	crHandler := CreateSellerHandler(db)
+	dlHandler := DeleteSellerHandler(db)
+
+	v1 := route.Group("/sellers")
+	{
+		v1.POST("", crHandler.CreateSeller)
+		v1.DELETE("/:id", dlHandler.DeleteSeller)
 	}
 }
 
