@@ -7,7 +7,7 @@ import (
 )
 
 type CreateCostumerRequest struct {
-	UserID string `json:"user_id"`
+	UserID int    `json:"user_id"`
 	Name   string `json:"name" validate:"required"`
 	Alamat string `json:"alamat" validate:"required"`
 	NoHp   string `json:"no_hp" validate:"required"`

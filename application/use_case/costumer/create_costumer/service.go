@@ -3,7 +3,6 @@ package create_costumer
 import (
 	"app/application/infrastructure"
 	"context"
-	"fmt"
 	"log"
 )
 
@@ -19,16 +18,9 @@ func NewCreateCostumerService(costumerRepo infrastructure.CostumerRepository, us
 	}
 }
 
-func (s *CreateCostumerService) CreateCostumer(ctx context.Context, req CreateCostumerRequest) error {
+func (s *CreateCostumerService) CreateCostumer(ctx context.Context, req CreateCostumerRequest, userId int) error {
 
-	//Get user By Id
-	user, errGetUser := s.userRepository.GetUserID(ctx, req.UserID)
-	if errGetUser != nil {
-		log.Fatal("Service - GetUserId error : ", errGetUser)
-	}
-	fmt.Println(user.ID)
-
-	errCreate := s.costumerRepository.CreateCostumer(ctx, RequestMapper(req, user.ID), user.ID)
+	errCreate := s.costumerRepository.CreateCostumer(ctx, RequestMapper(req, userId))
 	if errCreate != nil {
 		log.Fatal("Service - CreateCostumer error : ", errCreate)
 	}
