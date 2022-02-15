@@ -34,14 +34,14 @@ func (repo *SellerRepository) CreateSeller(ctx context.Context, seller models.Se
 func (repo *SellerRepository) GetSellerByUserID(ctx context.Context, id int) (models.Seller, error) {
 	seller := models.Seller{}
 
-	if err := repo.DB.Preload("Shop").First(&seller, id).Error; err != nil {
+	if err := repo.DB.Where("user_id = ?", id).First(&seller).Error; err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			log.Println("Repository - GetSellerByUserID Error : ", err)
 		}
 		return seller, err
 	}
 
-	fmt.Println(seller)
+	fmt.Println("repo", seller)
 	return seller, nil
 }
 

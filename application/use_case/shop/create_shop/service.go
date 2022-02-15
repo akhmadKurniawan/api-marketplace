@@ -20,12 +20,9 @@ func NewCreateShopService(shopRepo infrastructure.ShopRepository, sellerRepo inf
 
 func (s *CreateShopService) CreateShop(ctx context.Context, req CreateShopRequest) error {
 	//Get seller By Id
-
 	seller, errGetSeller := s.sellerRepository.GetSellerByUserID(ctx, req.UserID)
-	// fmt.Println(seller)
-	// fmt.Println(errGetSeller)
 	if errGetSeller != nil {
-		log.Fatal("Service - GetSellerId error : ", errGetSeller)
+		log.Fatal("Service - GetSellerByUserID error : ", errGetSeller)
 	}
 
 	errCreate := s.shopRepository.CreateShop(ctx, RequestMapper(req, seller.ID))

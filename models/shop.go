@@ -7,4 +7,5 @@ type Shop struct {
 	Alamat      string `json:"alamat" db:"alamat"`
 	Logo        string `json:"logo" db:"logo"`
 	SellerID    int    `json:"seller_id" db:"seller_id"`
+	ProductID   int    `json:"product_id" db:"product_id"`
 }
