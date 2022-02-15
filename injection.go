@@ -62,7 +62,7 @@ func CreateProductTypeHandler(db *gorm.DB) create_product_type.CreateProductType
 }
 
 func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
-	wire.Build(create_shop.NewCreateShopHandler, create_shop.NewCreateShopService, repository.NewShopRepository)
+	wire.Build(create_shop.NewCreateShopHandler, create_shop.NewCreateShopService, repository.NewShopRepository, repository.NewSellerRepository)
 	return create_shop.CreateShopHandler{}
 }
 

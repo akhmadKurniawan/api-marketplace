@@ -21,9 +21,9 @@ func NewCostumerRepository(db *gorm.DB) infrastructure.CostumerRepository {
 func (repo *CostumerRepository) CreateCostumer(ctx context.Context, costumer models.Costumer) error {
 	db := repo.DB
 
-	errCreate := db.Create(&costumer).Error
-	if errCreate != nil {
-		return errCreate
+	userID := db.Where("user_id = ?", costumer.UserID).Take(&costumer).Error
+	if userID != nil {
+		db.Create(&costumer)
 	}
 
 	return nil

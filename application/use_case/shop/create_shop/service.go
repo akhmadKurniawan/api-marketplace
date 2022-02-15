@@ -7,17 +7,28 @@ import (
 )
 
 type CreateShopService struct {
-	shopRepository infrastructure.ShopRepository
+	shopRepository   infrastructure.ShopRepository
+	sellerRepository infrastructure.SellerRepository
 }
 
-func NewCreateShopService(shopRepo infrastructure.ShopRepository) CreateShopService {
+func NewCreateShopService(shopRepo infrastructure.ShopRepository, sellerRepo infrastructure.SellerRepository) CreateShopService {
 	return CreateShopService{
-		shopRepository: shopRepo,
+		shopRepository:   shopRepo,
+		sellerRepository: sellerRepo,
 	}
 }
 
 func (s *CreateShopService) CreateShop(ctx context.Context, req CreateShopRequest) error {
-	errCreate := s.shopRepository.CreateShop(ctx, RequestMapper(req))
+	//Get seller By Id
+
+	seller, errGetSeller := s.sellerRepository.GetSellerByUserID(ctx, req.UserID)
+	// fmt.Println(seller)
+	// fmt.Println(errGetSeller)
+	if errGetSeller != nil {
+		log.Fatal("Service - GetSellerId error : ", errGetSeller)
+	}
+
+	errCreate := s.shopRepository.CreateShop(ctx, RequestMapper(req, seller.ID))
 	if errCreate != nil {
 		log.Fatal("Service - CreateShop error : ", errCreate)
 	}

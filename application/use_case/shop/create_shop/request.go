@@ -12,6 +12,7 @@ type CreateShopRequest struct {
 	Alamat      string `json:"alamat"`
 	Logo        string `json:"logo"`
 	SellerID    int    `json:"seller_id"`
+	UserID      int
 }
 
 func ValidateRequest(req *CreateShopRequest) (bool, error) {
@@ -23,12 +24,12 @@ func ValidateRequest(req *CreateShopRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateShopRequest) models.Shop {
+func RequestMapper(req CreateShopRequest, sellerID int) models.Shop {
 	return models.Shop{
 		Name:        req.Name,
 		Description: req.Description,
 		Alamat:      req.Alamat,
 		Logo:        req.Logo,
-		SellerID:    req.SellerID,
+		SellerID:    sellerID,
 	}
 }

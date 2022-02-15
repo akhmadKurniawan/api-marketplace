@@ -1,6 +1,8 @@
 package create_costumer
 
 import (
+	"app/models"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -21,6 +23,7 @@ func NewCreateCostumerHandler(costumerServ CreateCostumerService) CreateCostumer
 
 func (h *CreateCostumerHandler) CreateCostumer(c *gin.Context) {
 	req := CreateCostumerRequest{}
+	var cost models.Costumer
 	ctx := c.Request.Context()
 	acc, _ := c.Get("UserId")
 	accountID := strconv.FormatInt(acc.(int64), 10)
@@ -37,13 +40,23 @@ func (h *CreateCostumerHandler) CreateCostumer(c *gin.Context) {
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
+	fmt.Println(userID)
+	fmt.Println(cost.UserID)
+	fmt.Println(cost.ID)
 
-	errCreate := h.costumerService.CreateCostumer(ctx, req, userID)
-	if errCreate != nil {
-		log.Fatal("Controller - CreateCostumer error while access service : ", errCreate)
-		c.JSON(500, response.SetMessage(errCreate.Error(), false))
+	if userID == req.UserID {
+		fmt.Println("you already created")
+		c.JSON(500, response.SetMessage("Cannt create 2 costumer", false))
 		return
+	} else {
+		errCreate := h.costumerService.CreateCostumer(ctx, req, userID)
+		if errCreate != nil {
+			log.Fatal("Controller - CreateCostumer error while access service : ", errCreate)
+			c.JSON(500, response.SetMessage(errCreate.Error(), false))
+			return
+		}
+
+		c.JSON(http.StatusCreated, response.SetMessage("success", true))
 	}
 
-	c.JSON(http.StatusCreated, response.SetMessage("success", true))
 }

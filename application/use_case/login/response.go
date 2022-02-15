@@ -17,6 +17,7 @@ type (
 		UserID    int       `json:"user_id"`
 		Token     string    `json:"token"`
 		Username  string    `json:"username"`
+		Role      int       `json:"role"`
 		CreatedAt time.Time `json:"created_at"`
 		UpdatedAt time.Time `json:"updated_at"`
 	}
@@ -41,6 +42,7 @@ func ResponseMapper(models *Response) LoginResponseData {
 		UserID:    models.User.ID,
 		Token:     models.User.UserToken.Token,
 		Username:  models.User.Username,
+		Role:      models.User.Role,
 		CreatedAt: models.User.CreatedAt,
 		UpdatedAt: models.User.UpdatedAt,
 	}

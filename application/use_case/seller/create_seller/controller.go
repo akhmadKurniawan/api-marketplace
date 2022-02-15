@@ -27,10 +27,10 @@ func (h *CreateSellerHandler) CreateSeller(c *gin.Context) {
 	accountID := strconv.FormatInt(acc.(int64), 10)
 	id, _ := strconv.Atoi(accountID)
 	fmt.Println(id)
-	a, _ := c.Get("Role")
-	b := strconv.FormatInt(a.(int64), 10)
-	d, _ := strconv.Atoi(b)
-	fmt.Println("role", d)
+	r, _ := c.Get("Role")
+	accRole := strconv.FormatInt(r.(int64), 10)
+	role, _ := strconv.Atoi(accRole)
+	fmt.Println("role", role)
 
 	if err := c.ShouldBind(&req); err != nil {
 		log.Fatal("Controller - CreateSeller error while binding request : ", err)
@@ -42,13 +42,18 @@ func (h *CreateSellerHandler) CreateSeller(c *gin.Context) {
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
-	// userID = req.UserID
-	errCreate := h.sellerService.CreateSeller(ctx, req, id)
-	if errCreate != nil {
-		log.Fatal("Controller - CreateSeller error while access service : ", errCreate)
-		c.JSON(500, response.SetMessage(errCreate.Error(), false))
-		return
-	}
 
-	c.JSON(http.StatusCreated, response.SetMessage("success", true))
+	if role < 2 {
+		fmt.Println("you cannt create seller")
+		c.JSON(400, response.SetMessage("you cannt create seller", false))
+		return
+	} else {
+		errCreate := h.sellerService.CreateSeller(ctx, req, id)
+		if errCreate != nil {
+			log.Fatal("Controller - CreateSeller error while access service : ", errCreate)
+			c.JSON(500, response.SetMessage(errCreate.Error(), false))
+			return
+		}
+		c.JSON(http.StatusCreated, response.SetMessage("success", true))
+	}
 }

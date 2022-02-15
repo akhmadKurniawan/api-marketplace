@@ -4,6 +4,9 @@ import (
 	"app/application/infrastructure"
 	"app/models"
 	"context"
+	"errors"
+	"fmt"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -26,6 +29,20 @@ func (repo *SellerRepository) CreateSeller(ctx context.Context, seller models.Se
 		return errCreate
 	}
 	return nil
+}
+
+func (repo *SellerRepository) GetSellerByUserID(ctx context.Context, id int) (models.Seller, error) {
+	seller := models.Seller{}
+
+	if err := repo.DB.Preload("Shop").First(&seller, id).Error; err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Println("Repository - GetSellerByUserID Error : ", err)
+		}
+		return seller, err
+	}
+
+	fmt.Println(seller)
+	return seller, nil
 }
 
 func (repo *SellerRepository) DeleteSeller(ctx context.Context, id string) error {

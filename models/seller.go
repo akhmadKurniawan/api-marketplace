@@ -6,4 +6,5 @@ type Seller struct {
 	Name   string `json:"name" db:"name"`
 	Alamat string `json:"alamt" db:"alamat"`
 	NoHp   string `json:"no_hp" db:"no_hp"`
+	Shop   Shop
 }
