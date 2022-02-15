@@ -15,6 +15,7 @@ import (
 	"app/application/use_case/transaction/create_transaction"
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
+	"app/application/use_case/walet/create_walet"
 
 	"github.com/google/wire"
 	"gorm.io/gorm"
@@ -68,4 +69,9 @@ func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
 func CreateTransactionHandler(db *gorm.DB) create_transaction.CreateTransactionHandler {
 	wire.Build(create_transaction.NewCreateTransactionHandler, create_transaction.NewCreateTransactionService, repository.NewTransactionRepository)
 	return create_transaction.CreateTransactionHandler{}
+}
+
+func CreateWaletHandler(db *gorm.DB) create_walet.CreateWaletHandler {
+	wire.Build(create_walet.NewCreateWaletHandler, create_walet.NewCreateWaletService, repository.NewWaletRepository)
+	return create_walet.CreateWaletHandler{}
 }

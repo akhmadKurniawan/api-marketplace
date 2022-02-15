@@ -18,6 +18,7 @@ import (
 	"app/application/use_case/transaction/create_transaction"
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
+	"app/application/use_case/walet/create_walet"
 	"gorm.io/gorm"
 )
 
@@ -92,4 +93,11 @@ func CreateTransactionHandler(db *gorm.DB) create_transaction.CreateTransactionH
 	createTransactionService := create_transaction.NewCreateTransactionService(transactionRepository)
 	createTransactionHandler := create_transaction.NewCreateTransactionHandler(createTransactionService)
 	return createTransactionHandler
+}
+
+func CreateWaletHandler(db *gorm.DB) create_walet.CreateWaletHandler {
+	waletRepository := repository.NewWaletRepository(db)
+	createWaletService := create_walet.NewCreateWaletService(waletRepository)
+	createWaletHandler := create_walet.NewCreateWaletHandler(createWaletService)
+	return createWaletHandler
 }

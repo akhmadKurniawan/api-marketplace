@@ -31,6 +31,7 @@ func main() {
 	ProductRoutes(v1, db)
 	ShopRoutes(v1, db)
 	TransactionRoutes(v1, db)
+	WaletRoutes(v1, db)
 
 	env := godotenv.Load()
 	if env != nil {
@@ -118,5 +119,14 @@ func TransactionRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	v1 := route.Group("/transactions")
 	{
 		v1.POST("", crHandler.CreateTransaction)
+	}
+}
+
+func WaletRoutes(route *gin.RouterGroup, db *gorm.DB) {
+	crHandler := CreateWaletHandler(db)
+
+	v1 := route.Group("/walets")
+	{
+		v1.POST("", crHandler.CreateWalet)
 	}
 }
