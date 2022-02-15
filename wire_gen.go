@@ -15,6 +15,7 @@ import (
 	"app/application/use_case/seller/create_seller"
 	"app/application/use_case/seller/delete_seller"
 	"app/application/use_case/shop/create_shop"
+	"app/application/use_case/transaction/create_transaction"
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
 	"gorm.io/gorm"
@@ -84,4 +85,11 @@ func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
 	createShopService := create_shop.NewCreateShopService(shopRepository)
 	createShopHandler := create_shop.NewCreateShopHandler(createShopService)
 	return createShopHandler
+}
+
+func CreateTransactionHandler(db *gorm.DB) create_transaction.CreateTransactionHandler {
+	transactionRepository := repository.NewTransactionRepository(db)
+	createTransactionService := create_transaction.NewCreateTransactionService(transactionRepository)
+	createTransactionHandler := create_transaction.NewCreateTransactionHandler(createTransactionService)
+	return createTransactionHandler
 }

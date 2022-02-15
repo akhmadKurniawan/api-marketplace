@@ -26,7 +26,7 @@ func (h *CreateCostumerHandler) CreateCostumer(c *gin.Context) {
 	accountID := strconv.FormatInt(acc.(int64), 10)
 	userID, _ := strconv.Atoi(accountID)
 
-	if err := c.Bind(&req); err != nil {
+	if err := c.ShouldBind(&req); err != nil {
 		log.Fatal("Controller - CreateCostumer error while binding request : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
