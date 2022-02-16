@@ -5,7 +5,6 @@ import (
 	"app/models"
 	"context"
 	"errors"
-	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -41,7 +40,6 @@ func (repo *SellerRepository) GetSellerByUserID(ctx context.Context, id int) (mo
 		return seller, err
 	}
 
-	fmt.Println("repo", seller)
 	return seller, nil
 }
 

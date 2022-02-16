@@ -26,11 +26,9 @@ func (h *CreateSellerHandler) CreateSeller(c *gin.Context) {
 	acc, _ := c.Get("UserId")
 	accountID := strconv.FormatInt(acc.(int64), 10)
 	id, _ := strconv.Atoi(accountID)
-	fmt.Println(id)
 	r, _ := c.Get("Role")
 	accRole := strconv.FormatInt(r.(int64), 10)
 	role, _ := strconv.Atoi(accRole)
-	fmt.Println("role", role)
 
 	if err := c.ShouldBind(&req); err != nil {
 		log.Fatal("Controller - CreateSeller error while binding request : ", err)

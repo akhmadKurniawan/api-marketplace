@@ -69,7 +69,9 @@ func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
 
 func CreateProductHandler(db *gorm.DB) create_product.CreateProductHandler {
 	productRepository := repository.NewProductRepository(db)
-	createProductService := create_product.NewCreateProductService(productRepository)
+	shopRepository := repository.NewShopRepository(db)
+	sellerRepository := repository.NewSellerRepository(db)
+	createProductService := create_product.NewCreateProductService(productRepository, shopRepository, sellerRepository)
 	createProductHandler := create_product.NewCreateProductHandler(createProductService)
 	return createProductHandler
 }

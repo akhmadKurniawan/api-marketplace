@@ -28,3 +28,13 @@ func (repo *CostumerRepository) CreateCostumer(ctx context.Context, costumer mod
 
 	return nil
 }
+
+func (repo *CostumerRepository) GetCostumerByUserId(ctx context.Context, id int) (models.Costumer, error) {
+	costumer := models.Costumer{}
+	db := repo.DB
+
+	if err := db.Where("user_id = ?", id).First(&costumer).Error; err != nil {
+		return costumer, err
+	}
+	return costumer, nil
+}

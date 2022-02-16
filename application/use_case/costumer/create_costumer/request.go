@@ -7,7 +7,7 @@ import (
 )
 
 type CreateCostumerRequest struct {
-	UserID int    `json:"user_id"`
+	UserID int
 	Name   string `json:"name" validate:"required"`
 	Alamat string `json:"alamat" validate:"required"`
 	NoHp   string `json:"no_hp" validate:"required"`
@@ -22,9 +22,9 @@ func ValidateRequest(req *CreateCostumerRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateCostumerRequest, userId int) models.Costumer {
+func RequestMapper(req CreateCostumerRequest) models.Costumer {
 	return models.Costumer{
-		UserID: userId,
+		UserID: req.UserID,
 		Name:   req.Name,
 		Alamat: req.Alamat,
 		NoHp:   req.NoHp,

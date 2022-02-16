@@ -3,6 +3,7 @@ package create_product
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/refactory-id/go-core-package/response"
@@ -21,6 +22,9 @@ func NewCreateProductHandler(productServ CreateProductService) CreateProductHand
 func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 	req := CreateProductRequest{}
 	ctx := c.Request.Context()
+	acc, _ := c.Get("UserId")
+	accountID := strconv.FormatInt(acc.(int64), 10)
+	userID, _ := strconv.Atoi(accountID)
 
 	if err := c.ShouldBind(&req); err != nil {
 		log.Fatal("Controller - CreateProduct error while binding request : ", err)
@@ -34,6 +38,7 @@ func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 		return
 	}
 
+	req.UserID = userID
 	errCreate := h.productService.CreateProduct(ctx, req)
 	if errCreate != nil {
 		log.Fatal("Controller - CreateProduct error while access service : ", errCreate)

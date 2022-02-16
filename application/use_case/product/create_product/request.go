@@ -14,6 +14,7 @@ type CreateProductRequest struct {
 	Description string `json:"description"`
 	Qty         string `json:"qty"`
 	Image       string `json:"image"`
+	UserID      int
 }
 
 func ValidateRequest(req *CreateProductRequest) (bool, error) {
@@ -25,10 +26,10 @@ func ValidateRequest(req *CreateProductRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateProductRequest) models.Product {
+func RequestMapper(req CreateProductRequest, ShopId int) models.Product {
 	return models.Product{
 		ProductType: req.ProductType,
-		ShopId:      req.ShopId,
+		ShopId:      ShopId,
 		Name:        req.Name,
 		Price:       req.Price,
 		Description: req.Description,
