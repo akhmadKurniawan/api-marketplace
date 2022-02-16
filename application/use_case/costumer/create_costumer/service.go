@@ -3,7 +3,6 @@ package create_costumer
 import (
 	"app/application/infrastructure"
 	"context"
-	"fmt"
 	"log"
 )
 
@@ -19,7 +18,6 @@ func NewCreateCostumerService(costumerRepo infrastructure.CostumerRepository) Cr
 
 func (s *CreateCostumerService) CreateCostumer(ctx context.Context, req CreateCostumerRequest) error {
 	costumer, _ := s.costumerRepository.GetCostumerByUserId(ctx, req.UserID)
-	fmt.Println(costumer)
 	if req.UserID == costumer.UserID {
 		log.Fatal("Service - you already created costumer")
 	}

@@ -26,10 +26,10 @@ func ValidateRequest(req *CreateProductRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateProductRequest, ShopId int) models.Product {
+func RequestMapper(req CreateProductRequest) models.Product {
 	return models.Product{
 		ProductType: req.ProductType,
-		ShopId:      ShopId,
+		ShopId:      req.ShopId,
 		Name:        req.Name,
 		Price:       req.Price,
 		Description: req.Description,
