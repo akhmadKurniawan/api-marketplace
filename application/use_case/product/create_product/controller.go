@@ -4,7 +4,6 @@ import (
 	"app/middleware"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -24,27 +23,6 @@ func NewCreateProductHandler(productServ CreateProductService) CreateProductHand
 func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 	req := CreateProductRequest{}
 	ctx := c.Request.Context()
-	acc, _ := c.Get("UserId")
-	accountID := strconv.FormatInt(acc.(int64), 10)
-	userID, _ := strconv.Atoi(accountID)
-
-	// fmt.Println(req.Image)
-	// //input tipe file
-	// file, err := c.FormFile(req.Image.Filename)
-	// fmt.Println(file)
-	// fmt.Println(err)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, response.SetMessage(err.Error(), false))
-	// 	return
-	// }
-	// fmt.Println(req.Image.Filename)
-
-	// //set folder untuk menyimpan filenya
-	// path := "images/" + file.Filename
-	// if err := c.SaveUploadedFile(file, path); err != nil {
-	// 	c.JSON(http.StatusBadRequest, response.SetMessage(err.Error(), false))
-	// 	return
-	// }
 
 	if err := c.ShouldBind(&req); err != nil {
 		log.Fatal("Controller - CreateProduct error while binding request : ", err)
@@ -66,7 +44,6 @@ func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 		}
 	}
 
-	req.UserID = userID
 	errCreate := h.productService.CreateProduct(ctx, req, file.FileUrl)
 	if errCreate != nil {
 		log.Fatal("Controller - CreateProduct error while access service : ", errCreate)
