@@ -9,5 +9,4 @@ type Product struct {
 	Description string `json:"description" db:"description"`
 	Qty         string `json:"qty" db:"qty"`
 	Image       string `json:"image" db:"image"`
-	Shop        Shop   `json:"shop"`
 }

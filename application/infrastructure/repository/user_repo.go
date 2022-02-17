@@ -59,6 +59,7 @@ func (repo *UserRepository) GetUsername(ctx context.Context, username string) (m
 func (repo *UserRepository) DeleteUser(ctx context.Context, id string) error {
 	user := models.User{}
 	seller := models.Seller{}
+	costumer := models.Costumer{}
 	token := models.UserToken{}
 
 	tx := repo.DB.Begin()
@@ -78,6 +79,11 @@ func (repo *UserRepository) DeleteUser(ctx context.Context, id string) error {
 	}
 
 	if err := tx.Where("user_id = ?", id).Delete(&seller).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Where("user_id = ?", id).Delete(&costumer).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
