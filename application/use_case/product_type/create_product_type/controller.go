@@ -2,8 +2,10 @@ package create_product_type
 
 import (
 	"app/middleware"
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +25,9 @@ func NewCreateProductTypeHandler(productTypeServ CreateProductTypeService) Creat
 func (h *CreateProductTypeHandler) CreateProductType(c *gin.Context) {
 	req := CreateProductTypeRequest{}
 	ctx := c.Request.Context()
+	r, _ := c.Get("Role")
+	accRole := strconv.FormatInt(r.(int64), 10)
+	role, _ := strconv.Atoi(accRole)
 
 	if err := c.Bind(&req); err != nil {
 		log.Fatal("Controller - CreateProductType error while binding request : ", err)
@@ -44,12 +49,19 @@ func (h *CreateProductTypeHandler) CreateProductType(c *gin.Context) {
 		}
 	}
 
-	errCreate := h.productTypeService.CreateProductType(ctx, req, file.FileUrl)
-	if errCreate != nil {
-		log.Fatal("Controller - CreateProductType error while access service : ", errCreate)
-		c.JSON(500, response.SetMessage(errCreate.Error(), false))
+	if role < 2 {
+		fmt.Println("you cannt create seller")
+		c.JSON(400, response.SetMessage("you cannt create seller", false))
 		return
+	} else {
+		errCreate := h.productTypeService.CreateProductType(ctx, req, file.FileUrl)
+		if errCreate != nil {
+			log.Fatal("Controller - CreateProductType error while access service : ", errCreate)
+			c.JSON(500, response.SetMessage(errCreate.Error(), false))
+			return
+		}
+
+		c.JSON(http.StatusCreated, response.SetMessage("success", true))
 	}
 
-	c.JSON(http.StatusCreated, response.SetMessage("success", true))
 }
