@@ -49,10 +49,12 @@ func main() {
 func UserRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	crHandler := CreateUserHandler(db)
 	dlHandler := DeleteUserHandler(db)
+	upHandler := UpdateUserHandler(db)
 
 	v1 := route.Group("/users")
 	{
 		v1.POST("", crHandler.CreateUser)
+		v1.PUT("/:id", upHandler.UpdateUserHandler)
 		v1.DELETE("/:id", dlHandler.DeleteUser)
 	}
 }

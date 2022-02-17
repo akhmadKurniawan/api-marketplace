@@ -4,6 +4,7 @@ import "time"
 
 type User struct {
 	Model
+	Name        string    `json:"name" db:"name"`
 	Username    string    `json:"username" db:"username"`
 	Password    string    `json:"password" db:"password"`
 	Role        int       `json:"role" db:"role"`

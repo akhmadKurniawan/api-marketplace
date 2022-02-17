@@ -18,6 +18,7 @@ import (
 	"app/application/use_case/transaction/create_transaction"
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
+	"app/application/use_case/user/update_user"
 	"app/application/use_case/walet/create_walet"
 	"gorm.io/gorm"
 )
@@ -29,6 +30,13 @@ func CreateUserHandler(db *gorm.DB) create_user.CreateUserHandler {
 	createUserService := create_user.NewCreateUserService(userRepository)
 	createUserHandler := create_user.NewCreateUserHandler(createUserService)
 	return createUserHandler
+}
+
+func UpdateUserHandler(db *gorm.DB) update_user.UpdateUserHandler {
+	userRepository := repository.NewUserRepository(db)
+	updateUserService := update_user.NewUpdateUserService(userRepository)
+	updateUserHandler := update_user.NewUpdateUserHandler(updateUserService)
+	return updateUserHandler
 }
 
 func DeleteUserHandler(db *gorm.DB) delete_user.DeleteUserHandler {

@@ -56,6 +56,15 @@ func (repo *UserRepository) GetUsername(ctx context.Context, username string) (m
 	return userData, nil
 }
 
+func (repo *UserRepository) UpdateUser(ctx context.Context, user models.User, id string) (models.User, error) {
+	errUpdate := repo.DB.Model(&user).Where("id = ?", id).Updates(&user).Error
+	if errUpdate != nil {
+		return user, errUpdate
+	}
+
+	return user, nil
+}
+
 func (repo *UserRepository) DeleteUser(ctx context.Context, id string) error {
 	user := models.User{}
 	seller := models.Seller{}
