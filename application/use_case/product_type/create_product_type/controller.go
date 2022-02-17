@@ -1,8 +1,10 @@
 package create_product_type
 
 import (
+	"app/middleware"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/refactory-id/go-core-package/response"
@@ -34,7 +36,15 @@ func (h *CreateProductTypeHandler) CreateProductType(c *gin.Context) {
 		return
 	}
 
-	errCreate := h.productTypeService.CreateProductType(ctx, req)
+	file, errFile := middleware.UploadFile(c, "image")
+	if errFile != nil {
+		if !strings.Contains(errFile.Error(), "Empty File") {
+			c.JSON(422, response.SetMessage(errFile.Error(), false))
+			return
+		}
+	}
+
+	errCreate := h.productTypeService.CreateProductType(ctx, req, file.FileUrl)
 	if errCreate != nil {
 		log.Fatal("Controller - CreateProductType error while access service : ", errCreate)
 		c.JSON(500, response.SetMessage(errCreate.Error(), false))

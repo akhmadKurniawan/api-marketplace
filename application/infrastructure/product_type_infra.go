@@ -6,5 +6,5 @@ import (
 )
 
 type ProductTypeRepository interface {
-	CreateProductType(context.Context, models.ProductType) error
+	CreateProductType(context.Context, models.ProductType, string) error
 }
