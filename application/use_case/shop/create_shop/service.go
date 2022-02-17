@@ -18,14 +18,14 @@ func NewCreateShopService(shopRepo infrastructure.ShopRepository, sellerRepo inf
 	}
 }
 
-func (s *CreateShopService) CreateShop(ctx context.Context, req CreateShopRequest) error {
+func (s *CreateShopService) CreateShop(ctx context.Context, req CreateShopRequest, ImgFile string) error {
 	//Get seller By Id
 	seller, errGetSeller := s.sellerRepository.GetSellerByUserID(ctx, req.UserID)
 	if errGetSeller != nil {
 		log.Fatal("Service - GetSellerByUserID error : ", errGetSeller)
 	}
 
-	errCreate := s.shopRepository.CreateShop(ctx, RequestMapper(req, seller.ID))
+	errCreate := s.shopRepository.CreateShop(ctx, RequestMapper(req, seller.ID), ImgFile)
 	if errCreate != nil {
 		log.Fatal("Service - CreateShop error : ", errCreate)
 	}

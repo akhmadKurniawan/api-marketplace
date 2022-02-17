@@ -1,9 +1,11 @@
 package create_shop
 
 import (
+	"app/middleware"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/refactory-id/go-core-package/response"
@@ -38,8 +40,16 @@ func (h *CreateShopHandler) CreateShop(c *gin.Context) {
 		return
 	}
 
+	file, errFile := middleware.UploadFile(c, "image")
+	if errFile != nil {
+		if !strings.Contains(errFile.Error(), "Empty File") {
+			c.JSON(422, response.SetMessage(errFile.Error(), false))
+			return
+		}
+	}
+
 	req.UserID = userID
-	errCreate := h.shopService.CreateShop(ctx, req)
+	errCreate := h.shopService.CreateShop(ctx, req, file.FileUrl)
 	if errCreate != nil {
 		log.Fatal("Controller - CreateShop error while access service : ", errCreate)
 		c.JSON(500, response.SetMessage(errCreate.Error(), false))

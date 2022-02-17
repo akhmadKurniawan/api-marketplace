@@ -7,11 +7,11 @@ import (
 )
 
 type CreateShopRequest struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Alamat      string `json:"alamat"`
-	Logo        string `json:"logo"`
-	SellerID    int    `json:"seller_id"`
+	Name        string `json:"name" form:"name"`
+	Description string `json:"description" form:"description"`
+	Alamat      string `json:"alamat" form:"alamat"`
+	Logo        string `json:"logo" form:"logo"`
+	SellerID    int    `json:"seller_id" form:"seller_id"`
 	UserID      int
 }
 

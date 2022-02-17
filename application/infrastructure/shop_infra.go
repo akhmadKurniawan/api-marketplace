@@ -6,5 +6,5 @@ import (
 )
 
 type ShopRepository interface {
-	CreateShop(context.Context, models.Shop) error
+	CreateShop(context.Context, models.Shop, string) error
 }

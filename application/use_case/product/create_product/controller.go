@@ -36,7 +36,7 @@ func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	file, errFile := middleware.UploadFile(c, "file")
+	file, errFile := middleware.UploadFile(c, "image")
 	if errFile != nil {
 		if !strings.Contains(errFile.Error(), "Empty File") {
 			c.JSON(422, response.SetMessage(errFile.Error(), false))

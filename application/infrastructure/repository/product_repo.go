@@ -38,10 +38,9 @@ func (repo *ProductRepository) CreateProduct(ctx context.Context, product models
 	if errProductType != nil {
 		return errors.New("product type tidak ditemukan")
 	}
+
 	product.Image = imageFile
-
 	product.ProductType = productType.ID
-
 	product.ShopId = shop.ID
 
 	errCreate := db.Create(&product).Error
