@@ -33,7 +33,6 @@ func UploadFile(c *gin.Context, param string) (*SavedFile, error) {
 	}
 
 	hType := file.Header.Get("Content-Type")
-	fmt.Println(hType)
 	if !strings.HasPrefix(hType, "image/") {
 		return &SavedFile{}, errors.New("only image file allowed")
 	}

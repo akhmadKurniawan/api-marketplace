@@ -27,7 +27,11 @@ func (repo *ProductRepository) CreateProduct(ctx context.Context, product models
 	errShop := db.First(&shop, product.ShopId).Error
 	if errShop != nil {
 		return errors.New("shop tidak ditemukan")
-		// log.Fatal("shop tidak ditemukan", err)
+	}
+
+	errShopN := db.Where("name = ? AND shop_id = ?", product.Name, product.ShopId).Find(&product).Error
+	if errShopN != nil {
+		return errors.New("name already exist")
 	}
 
 	errProductType := db.First(&productType, product.ProductType).Error
