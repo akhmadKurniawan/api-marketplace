@@ -21,6 +21,8 @@ func main() {
 	v1 := r.Group("/api/v1")
 	db := database.DBInit()
 
+	ImgRoute(v1, db)
+
 	v1.Use(middleware.AuthenticationRequired())
 
 	UserRoutes(v1, db)
@@ -95,6 +97,17 @@ func ProductRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	{
 		v1.POST("", crHandler.CreateProduct)
 	}
+}
+
+func ImgRoute(route *gin.RouterGroup, db *gorm.DB) {
+	route.GET("/images/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		if id == "" {
+			c.File("./images/default-image.png")
+		} else {
+			c.File("./images/" + id)
+		}
+	})
 }
 
 func ProductTypeRoutes(route *gin.RouterGroup, db *gorm.DB) {

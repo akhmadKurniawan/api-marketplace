@@ -19,7 +19,7 @@ func NewProductRepository(db *gorm.DB) infrastructure.ProductRepository {
 	}
 }
 
-func (repo *ProductRepository) CreateProduct(ctx context.Context, product models.Product) error {
+func (repo *ProductRepository) CreateProduct(ctx context.Context, product models.Product, imageFile string) error {
 	db := repo.DB
 	shop := models.Shop{}
 	productType := models.ProductType{}
@@ -34,9 +34,12 @@ func (repo *ProductRepository) CreateProduct(ctx context.Context, product models
 	if errProductType != nil {
 		return errors.New("product type tidak ditemukan")
 	}
+	product.Image = imageFile
 
 	product.ProductType = productType.ID
+
 	product.ShopId = shop.ID
+
 	errCreate := db.Create(&product).Error
 	if errCreate != nil {
 		return errCreate

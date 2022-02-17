@@ -7,13 +7,12 @@ import (
 )
 
 type CreateProductRequest struct {
-	ProductType int    `json:"product_type"`
-	ShopId      int    `json:"shop_id"`
-	Name        string `json:"name"`
-	Price       int    `json:"price"`
-	Description string `json:"description"`
-	Qty         string `json:"qty"`
-	Image       string `json:"image"`
+	ProductType int    `json:"product_type" form:"product_type"`
+	ShopId      int    `json:"shop_id" form:"shop_id"`
+	Name        string `json:"name" form:"name"`
+	Price       int    `json:"price" form:"price"`
+	Description string `json:"description" form:"description"`
+	Qty         string `json:"qty" form:"qty"`
 	UserID      int
 }
 
@@ -34,6 +33,5 @@ func RequestMapper(req CreateProductRequest) models.Product {
 		Price:       req.Price,
 		Description: req.Description,
 		Qty:         req.Qty,
-		Image:       req.Image,
 	}
 }

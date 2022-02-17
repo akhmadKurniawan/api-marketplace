@@ -20,8 +20,8 @@ func NewCreateProductService(productRepo infrastructure.ProductRepository, shopR
 	}
 }
 
-func (s *CreateProductService) CreateProduct(ctx context.Context, req CreateProductRequest) error {
-	errCreate := s.productRepository.CreateProduct(ctx, RequestMapper(req))
+func (s *CreateProductService) CreateProduct(ctx context.Context, req CreateProductRequest, img string) error {
+	errCreate := s.productRepository.CreateProduct(ctx, RequestMapper(req), img)
 	if errCreate != nil {
 		log.Fatal("Service - CreateProduct error : ", errCreate)
 	}
