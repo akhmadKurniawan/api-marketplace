@@ -12,7 +12,7 @@ type CreateProductRequest struct {
 	Name        string `json:"name" form:"name"`
 	Price       int    `json:"price" form:"price"`
 	Description string `json:"description" form:"description"`
-	Qty         string `json:"qty" form:"qty"`
+	Qty         int    `json:"qty" form:"qty"`
 }
 
 func ValidateRequest(req *CreateProductRequest) (bool, error) {

@@ -27,3 +27,15 @@ func (repo *WaletRepository) CreateWalet(ctx context.Context, walet models.Walet
 	}
 	return nil
 }
+
+func (repo *WaletRepository) GetWaletByUserID(ctx context.Context, id int) (models.Walet, error) {
+	db := repo.DB
+	walet := models.Walet{}
+
+	errGet := db.Where("user_id = ?", id).First(&walet).Error
+	if errGet != nil {
+		return walet, errGet
+	}
+
+	return walet, nil
+}

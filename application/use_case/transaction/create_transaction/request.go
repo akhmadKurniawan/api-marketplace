@@ -12,7 +12,7 @@ type CreateTransactionRequest struct {
 	Type         string `json:"type"`
 	Description  string `json:"description"`
 	Amount       int    `json:"amount"`
-	TotalProduct string `json:"total_product"`
+	TotalProduct int    `json:"total_product"`
 }
 
 func ValidateRequest(req *CreateTransactionRequest) (bool, error) {
@@ -24,9 +24,9 @@ func ValidateRequest(req *CreateTransactionRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateTransactionRequest, userID int) models.Transaction {
+func RequestMapper(req CreateTransactionRequest) models.Transaction {
 	return models.Transaction{
-		UserID:       userID,
+		UserID:       req.UserID,
 		ProductID:    req.ProductID,
 		Type:         req.Type,
 		Description:  req.Description,

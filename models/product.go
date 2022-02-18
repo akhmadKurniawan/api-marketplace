@@ -7,6 +7,6 @@ type Product struct {
 	Name        string `json:"name" db:"name"`
 	Price       int    `json:"price" db:"price"`
 	Description string `json:"description" db:"description"`
-	Qty         string `json:"qty" db:"qty"`
+	Qty         int    `json:"qty" db:"qty"`
 	Image       string `json:"image" db:"image"`
 }

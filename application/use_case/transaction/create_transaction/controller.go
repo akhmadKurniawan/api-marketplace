@@ -38,7 +38,8 @@ func (h *CreateTransactionHandler) CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	errCreate := h.transactionService.CreateTransaction(ctx, req, userId)
+	req.UserID = userId
+	errCreate := h.transactionService.CreateTransaction(ctx, req)
 	if errCreate != nil {
 		log.Println("Controller - CreateTransaction error while access service : ", errCreate)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(errCreate.Error(), false))

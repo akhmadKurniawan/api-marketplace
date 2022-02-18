@@ -71,7 +71,14 @@ func (repo *ProductRepository) GetProduct(ctx context.Context, params models.Pro
 	if params.ShopId != 0 {
 		db = db.Where("shop_id = ?", params.ShopId)
 	}
+	if params.Qty != 0 {
+		db = db.Where("qty = ?", params.Qty)
+	}
+	if params.Price != 0 {
+		db = db.Where("price = ?", params.Price)
+	}
 
+	db.Debug().Find(&product)
 	errGet := db.Find(&product).Error
 	if errGet != nil {
 		return product, errGet

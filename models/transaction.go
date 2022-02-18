@@ -7,5 +7,5 @@ type Transaction struct {
 	Type         string `json:"type" db:"type"`
 	Description  string `json:"description" db:"description"`
 	Amount       int    `json:"amount" db:"amount"`
-	TotalProduct string `json:"total_product" db:"total_product"`
+	TotalProduct int    `json:"total_product" db:"total_product"`
 }
