@@ -27,20 +27,20 @@ func (h *CreateTransactionHandler) CreateTransaction(c *gin.Context) {
 	userId, _ := strconv.Atoi(accId)
 
 	if err := c.ShouldBind(&req); err != nil {
-		log.Fatal("Controller - CreateTransaction error while bind request : ", err)
+		log.Println("Controller - CreateTransaction error while bind request : ", err)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(err.Error(), false))
 		return
 	}
 
 	if ok, err := ValidateRequest(&req); !ok {
-		log.Fatal("Controller - CreateTransaction error validation : ", err)
+		log.Println("Controller - CreateTransaction error validation : ", err)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(err.Error(), false))
 		return
 	}
 
 	errCreate := h.transactionService.CreateTransaction(ctx, req, userId)
 	if errCreate != nil {
-		log.Fatal("Controller - CreateTransaction error while access service : ", errCreate)
+		log.Println("Controller - CreateTransaction error while access service : ", errCreate)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(errCreate.Error(), false))
 		return
 	}

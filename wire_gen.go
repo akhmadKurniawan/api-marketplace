@@ -101,7 +101,8 @@ func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
 
 func CreateTransactionHandler(db *gorm.DB) create_transaction.CreateTransactionHandler {
 	transactionRepository := repository.NewTransactionRepository(db)
-	createTransactionService := create_transaction.NewCreateTransactionService(transactionRepository)
+	productRepository := repository.NewProductRepository(db)
+	createTransactionService := create_transaction.NewCreateTransactionService(transactionRepository, productRepository)
 	createTransactionHandler := create_transaction.NewCreateTransactionHandler(createTransactionService)
 	return createTransactionHandler
 }

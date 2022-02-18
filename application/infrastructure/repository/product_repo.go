@@ -49,6 +49,18 @@ func (repo *ProductRepository) CreateProduct(ctx context.Context, product models
 	return nil
 }
 
+func (repo *ProductRepository) GetProductByID(ctx context.Context, id int) (models.Product, error) {
+	db := repo.DB
+	product := models.Product{}
+
+	errGet := db.First(&product, id).Error
+	if errGet != nil {
+		return product, errGet
+	}
+
+	return product, nil
+}
+
 func (repo *ProductRepository) GetProduct(ctx context.Context, params models.Product) (models.Product, error) {
 	db := repo.DB
 	product := models.Product{}
