@@ -49,7 +49,7 @@ func (s *CreateProductService) CreateProduct(ctx context.Context, req CreateProd
 	req.ProductType = productType.Model.ID
 	req.ShopId = shop.Model.ID
 
-	errCreate := s.productRepository.CreateProduct(ctx, RequestMapper(req), img)
+	errCreate := s.productRepository.CreateProduct(ctx, RequestMapper(req, img))
 	if errCreate != nil {
 		log.Println("Service - CreateProduct error : ", errCreate)
 		return errCreate

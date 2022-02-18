@@ -19,8 +19,9 @@ func ValidateRequest(req *CreateProductTypeRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateProductTypeRequest) models.ProductType {
+func RequestMapper(req CreateProductTypeRequest, img string) models.ProductType {
 	return models.ProductType{
-		Name: req.Name,
+		Name:  req.Name,
+		Image: img,
 	}
 }

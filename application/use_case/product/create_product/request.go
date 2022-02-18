@@ -24,7 +24,7 @@ func ValidateRequest(req *CreateProductRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateProductRequest) models.Product {
+func RequestMapper(req CreateProductRequest, img string) models.Product {
 	return models.Product{
 		ProductType: req.ProductType,
 		ShopId:      req.ShopId,
@@ -32,5 +32,6 @@ func RequestMapper(req CreateProductRequest) models.Product {
 		Price:       req.Price,
 		Description: req.Description,
 		Qty:         req.Qty,
+		Image:       img,
 	}
 }

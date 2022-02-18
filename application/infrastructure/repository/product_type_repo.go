@@ -18,10 +18,9 @@ func NewProductTypeRepository(db *gorm.DB) infrastructure.ProductTypeRepository 
 	}
 }
 
-func (repo *ProductTypeRepository) CreateProductType(ctx context.Context, productType models.ProductType, img string) error {
+func (repo *ProductTypeRepository) CreateProductType(ctx context.Context, productType models.ProductType) error {
 	db := repo.DB
 
-	productType.Image = img
 	errCreate := db.Create(&productType).Error
 	if errCreate != nil {
 		return errCreate

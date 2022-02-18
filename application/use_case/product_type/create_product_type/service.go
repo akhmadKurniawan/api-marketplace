@@ -17,9 +17,10 @@ func NewCreateProductTypeService(productTypeRepo infrastructure.ProductTypeRepos
 }
 
 func (s *CreateProductTypeService) CreateProductType(ctx context.Context, req CreateProductTypeRequest, img string) error {
-	errCreate := s.productTypeRepository.CreateProductType(ctx, RequestMapper(req), img)
+	errCreate := s.productTypeRepository.CreateProductType(ctx, RequestMapper(req, img))
 	if errCreate != nil {
-		log.Fatal("Service - CreateProductType error : ", errCreate)
+		log.Println("Service - CreateProductType error : ", errCreate)
+		return errCreate
 	}
 	return nil
 }
