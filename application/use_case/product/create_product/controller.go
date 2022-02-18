@@ -25,13 +25,13 @@ func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	if err := c.ShouldBind(&req); err != nil {
-		log.Fatal("Controller - CreateProduct error while binding request : ", err)
+		log.Println("Controller - CreateProduct error while binding request : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
 
 	if ok, err := ValidateRequest(&req); !ok {
-		log.Fatal("Controller - CreateProduct error validation : ", err)
+		log.Println("Controller - CreateProduct error validation : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
@@ -46,7 +46,7 @@ func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 
 	errCreate := h.productService.CreateProduct(ctx, req, file.FileUrl)
 	if errCreate != nil {
-		log.Fatal("Controller - CreateProduct error while access service : ", errCreate)
+		log.Println("Controller - CreateProduct error while access service : ", errCreate)
 		c.JSON(500, response.SetMessage(errCreate.Error(), false))
 		return
 	}
