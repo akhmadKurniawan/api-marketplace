@@ -29,6 +29,22 @@ func (repo *ProductTypeRepository) CreateProductType(ctx context.Context, produc
 	return nil
 }
 
+func (repo *ProductTypeRepository) GetProductType(ctx context.Context, params models.ProductType) (models.ProductType, error) {
+	db := repo.DB
+	productType := models.ProductType{}
+
+	if params.Name != "" {
+		db = db.Where("name = ?", params.Name)
+	}
+
+	errGet := db.Find(&productType).Error
+	if errGet != nil {
+		return productType, nil
+	}
+
+	return productType, nil
+}
+
 func (repo *ProductTypeRepository) GetProductTypeById(ctx context.Context, id int) (models.ProductType, error) {
 	db := repo.DB
 	productType := models.ProductType{}

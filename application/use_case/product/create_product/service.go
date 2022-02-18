@@ -40,7 +40,7 @@ func (s *CreateProductService) CreateProduct(ctx context.Context, req CreateProd
 		Name:   req.Name,
 	})
 
-	// kondisi eror = nil dan dilakukan pengecekan manual dan jika benar aplikasi berhenti
+	// kondisi eror selalu nil dan tidak nil jadi dilakukan pengecekan manual, jika name tidak kosong atau ada di database maka error
 	if errGetProduct != nil || product.Name != "" {
 		errGetProduct = errors.New("product name already exist")
 		return errGetProduct
