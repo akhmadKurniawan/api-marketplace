@@ -31,23 +31,32 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 	walet, errWalet := s.waletRepository.GetWaletByUserID(ctx, req.UserID)
 	if errWalet != nil {
 		log.Println("Service - CreateTransaction errorWalet : ", errWalet)
+		return errWalet
 	}
 
-	if errWalet != nil || walet.Saldo < product.Price {
+	if walet.Saldo < (product.Price * req.TotalProduct) {
 		errWalet = errors.New("your saldo not enough")
 		return errWalet
 	}
-	if errProduct != nil || product.Qty < req.TotalProduct {
+
+	if product.Qty < req.TotalProduct {
 		errProduct = errors.New("out of stok")
 		return errProduct
 	}
+	qty := product.Qty - req.TotalProduct
+	req.Product.Qty = qty
+	_, errUp := s.productRepository.UpdateProdut(ctx, product.ID, req.Product.Qty)
+	if errUp != nil {
+		log.Println("Service - CreateTransaction errorUpdateProduct : ", errUp)
+		return errUp
+	}
 
 	req.ProductID = product.ID
-
 	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return errCreate
 	}
+
 	return nil
 }

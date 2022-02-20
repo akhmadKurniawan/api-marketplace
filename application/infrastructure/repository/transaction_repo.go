@@ -21,10 +21,22 @@ func NewTransactionRepository(db *gorm.DB) infrastructure.TransactionRepository 
 func (repo *TransactionRepository) CreateTransaction(ctx context.Context, transaction models.Transaction) error {
 	db := repo.DB
 
-	errCreate := db.Create(&transaction).Error
-	if errCreate != nil {
-		return errCreate
+	tx := db.Begin()
+
+	err := tx.Create(&transaction).Error
+
+	if err != nil {
+		tx.Rollback()
+		return err
 	}
 
+	tx.Commit()
 	return nil
+
+	// errCreate := db.Create(&transaction).Error
+	// if errCreate != nil {
+	// 	return errCreate
+	// }
+
+	// return nil
 }

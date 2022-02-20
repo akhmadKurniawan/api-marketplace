@@ -61,6 +61,22 @@ func (repo *ProductRepository) GetProductByID(ctx context.Context, id int) (mode
 	return product, nil
 }
 
+func (repo *ProductRepository) UpdateProdut(ctx context.Context, id int, qty int) (models.Product, error) {
+	db := repo.DB
+	product := models.Product{}
+
+	tx := db.Begin()
+	db.Debug().Model(&product).Where("id = ?", id).Update("qty", qty)
+	errUp := tx.Model(&product).Where("id = ?", id).Update("qty", qty).Error
+	if errUp != nil {
+		tx.Rollback()
+		return product, errUp
+	}
+
+	tx.Commit()
+	return product, nil
+}
+
 func (repo *ProductRepository) GetProduct(ctx context.Context, params models.Product) (models.Product, error) {
 	db := repo.DB
 	product := models.Product{}

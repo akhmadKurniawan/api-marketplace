@@ -39,3 +39,16 @@ func (repo *WaletRepository) GetWaletByUserID(ctx context.Context, id int) (mode
 
 	return walet, nil
 }
+
+func (repo *WaletRepository) UpdateWaletByUserID(ctx context.Context, id int) (models.Walet, error) {
+	db := repo.DB
+	walet := models.Walet{}
+
+	tx := db.Begin()
+	errUp := tx.Where("user_id = ?", id).Update("saldo", walet.Saldo).Error
+	if errUp != nil {
+		tx.Rollback()
+	}
+
+	return walet, nil
+}
