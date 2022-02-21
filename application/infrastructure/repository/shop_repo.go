@@ -40,3 +40,15 @@ func (repo *ShopRepository) GetShopById(ctx context.Context, id int) (models.Sho
 
 	return shop, nil
 }
+
+func (repo *ShopRepository) GetShopBySellerId(ctx context.Context, id int) (models.Shop, error) {
+	db := repo.DB
+	shop := models.Shop{}
+
+	errGet := db.Where("id = ?", id).First(&shop).Error
+	if errGet != nil {
+		return shop, errGet
+	}
+
+	return shop, nil
+}

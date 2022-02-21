@@ -30,6 +30,18 @@ func (repo *SellerRepository) CreateSeller(ctx context.Context, seller models.Se
 	return nil
 }
 
+func (repo *SellerRepository) GetSellerByID(ctx context.Context, id int) (models.Seller, error) {
+	db := repo.DB
+	seller := models.Seller{}
+
+	errGet := db.First(&seller, id).Error
+	if errGet != nil {
+		return seller, errGet
+	}
+
+	return seller, nil
+}
+
 func (repo *SellerRepository) GetSellerByUserID(ctx context.Context, id int) (models.Seller, error) {
 	seller := models.Seller{}
 

@@ -36,7 +36,6 @@ func (p *loginRepository) Login(ctx context.Context, accessToken models.UserToke
 			return accessToken, err
 		}
 		return accessToken, nil
-
 	} else {
 		if err := p.DB.Model(&accToken).Where("user_id = ?", userID).Updates(&accessToken).Error; err != nil {
 			return accessToken, err

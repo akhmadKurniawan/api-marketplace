@@ -11,13 +11,17 @@ type CreateTransactionService struct {
 	transactionRepository infrastructure.TransactionRepository
 	productRepository     infrastructure.ProductRepository
 	waletRepository       infrastructure.WaletRepository
+	sellerRepository      infrastructure.SellerRepository
+	shopRepository        infrastructure.ShopRepository
 }
 
-func NewCreateTransactionService(transactionRepo infrastructure.TransactionRepository, productRepo infrastructure.ProductRepository, waletRepo infrastructure.WaletRepository) CreateTransactionService {
+func NewCreateTransactionService(transactionRepo infrastructure.TransactionRepository, productRepo infrastructure.ProductRepository, waletRepo infrastructure.WaletRepository, sellerRepo infrastructure.SellerRepository, shopRepo infrastructure.ShopRepository) CreateTransactionService {
 	return CreateTransactionService{
 		transactionRepository: transactionRepo,
 		productRepository:     productRepo,
 		waletRepository:       waletRepo,
+		sellerRepository:      sellerRepo,
+		shopRepository:        shopRepo,
 	}
 }
 
@@ -27,29 +31,65 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 		log.Println("Service - CreateTransaction errorProduct : ", errProduct)
 		return errProduct
 	}
+	if product.Qty < req.TotalProduct {
+		errProduct = errors.New("out of stok")
+		return errProduct
+	}
+	qty := product.Qty - req.TotalProduct
+	product.Qty = qty
+	_, errUp := s.productRepository.UpdateProdut(ctx, product.ID, product.Qty)
+	if errUp != nil {
+		log.Println("Service - CreateTransaction errorUpdateProduct : ", errUp)
+		return errUp
+	}
 
+	// get id buyer and update the saldo
 	walet, errWalet := s.waletRepository.GetWaletByUserID(ctx, req.UserID)
 	if errWalet != nil {
 		log.Println("Service - CreateTransaction errorWalet : ", errWalet)
 		return errWalet
 	}
 
-	if walet.Saldo < (product.Price * req.TotalProduct) {
+	totalAmount := product.Price * req.TotalProduct
+	if walet.Saldo < totalAmount {
 		errWalet = errors.New("your saldo not enough")
 		return errWalet
 	}
 
-	if product.Qty < req.TotalProduct {
-		errProduct = errors.New("out of stok")
-		return errProduct
+	saldo := walet.Saldo - totalAmount
+	walet.Saldo = saldo
+	_, errUpWalet := s.waletRepository.UpdateWaletSaldo(ctx, req.UserID, walet.Saldo)
+	if errUpWalet != nil {
+		log.Println("Service - CreateTransaction errorUpWalet : ", errUpWalet)
+		return errUpWalet
+	} //get id buyer and update the saldo
+
+	// get id seller and update the saldo
+	shop, errShop := s.shopRepository.GetShopBySellerId(ctx, product.ShopId)
+	if errShop != nil {
+		log.Println("Service - CreateTransaction errorShop : ", errShop)
+		return errShop
 	}
-	qty := product.Qty - req.TotalProduct
-	req.Product.Qty = qty
-	_, errUp := s.productRepository.UpdateProdut(ctx, product.ID, req.Product.Qty)
-	if errUp != nil {
-		log.Println("Service - CreateTransaction errorUpdateProduct : ", errUp)
-		return errUp
+
+	seller, errSeller := s.sellerRepository.GetSellerByID(ctx, shop.SellerID)
+	if errSeller != nil {
+		log.Println("Service - CreateTransaction errorSeller : ", errSeller)
+		return errSeller
 	}
+
+	waletSeller, errSellerWalet := s.waletRepository.GetWaletByUserID(ctx, seller.UserID)
+	if errSellerWalet != nil {
+		log.Println("Service - CreateTransaction errorSellerWalet : ", errSellerWalet)
+		return errSellerWalet
+	}
+
+	saldoSeller := waletSeller.Saldo + totalAmount
+	walet.Saldo = saldoSeller
+	_, errUpWalet = s.waletRepository.UpdateWaletSaldo(ctx, seller.UserID, walet.Saldo)
+	if errUpWalet != nil {
+		log.Println("Service - CreateTransaction errorUpWalet : ", errUpWalet)
+		return errUpWalet
+	} // get id seller and update the saldo
 
 	req.ProductID = product.ID
 	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req))

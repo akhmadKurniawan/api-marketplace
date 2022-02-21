@@ -40,15 +40,27 @@ func (repo *WaletRepository) GetWaletByUserID(ctx context.Context, id int) (mode
 	return walet, nil
 }
 
-func (repo *WaletRepository) UpdateWaletByUserID(ctx context.Context, id int) (models.Walet, error) {
+func (repo *WaletRepository) UpdateWaletSaldo(ctx context.Context, id int, saldo int) (models.Walet, error) {
 	db := repo.DB
 	walet := models.Walet{}
 
 	tx := db.Begin()
-	errUp := tx.Where("user_id = ?", id).Update("saldo", walet.Saldo).Error
+	db.Debug().Model(&walet).Where("user_id = ?", id).Update("saldo", saldo)
+	errUp := tx.Model(&walet).Where("user_id = ?", id).Update("saldo", saldo).Error
 	if errUp != nil {
 		tx.Rollback()
+		return walet, errUp
 	}
 
+	tx.Commit()
 	return walet, nil
 }
+
+// func (repo *WaletRepository) UpdateWaletSaldoSeller(ctx context.Context, id int, saldo int) (models.Walet,error) {
+// 	db := repo.DB
+// 	walet := models.Walet{}
+// 	seller := models.Seller{}
+
+// 	tx := db.Begin()
+// 	errUp := tx.Model(&walet).Where("user_id = ?", id).Model(&seller).Where("user_id = ?", id)
+// }

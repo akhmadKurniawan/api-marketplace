@@ -103,7 +103,9 @@ func CreateTransactionHandler(db *gorm.DB) create_transaction.CreateTransactionH
 	transactionRepository := repository.NewTransactionRepository(db)
 	productRepository := repository.NewProductRepository(db)
 	waletRepository := repository.NewWaletRepository(db)
-	createTransactionService := create_transaction.NewCreateTransactionService(transactionRepository, productRepository, waletRepository)
+	sellerRepository := repository.NewSellerRepository(db)
+	shopRepository := repository.NewShopRepository(db)
+	createTransactionService := create_transaction.NewCreateTransactionService(transactionRepository, productRepository, waletRepository, sellerRepository, shopRepository)
 	createTransactionHandler := create_transaction.NewCreateTransactionHandler(createTransactionService)
 	return createTransactionHandler
 }
