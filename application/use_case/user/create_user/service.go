@@ -22,11 +22,13 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 	// Hashing password user
 	hashedPassword, errHash := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if errHash != nil {
-		log.Fatal("Service - Error hash password ; ", errHash)
+		log.Println("Service - Error hash password ; ", errHash)
+		return errHash
 	}
 	err := s.userRepository.SignUpUser(ctx, RequestMapper(req, string(hashedPassword)))
 	if err != nil {
-		log.Fatal("Service - CreateUser error : ", err)
+		log.Println("Service - CreateUser error : ", err)
+		return errHash
 	}
 
 	return nil

@@ -19,12 +19,12 @@ func NewCreateCostumerService(costumerRepo infrastructure.CostumerRepository) Cr
 func (s *CreateCostumerService) CreateCostumer(ctx context.Context, req CreateCostumerRequest) error {
 	costumer, _ := s.costumerRepository.GetCostumerByUserId(ctx, req.UserID)
 	if req.UserID == costumer.UserID {
-		log.Fatal("Service - you already created costumer")
+		log.Println("Service - you already created costumer")
 	}
 
 	errCreate := s.costumerRepository.CreateCostumer(ctx, RequestMapper(req))
 	if errCreate != nil {
-		log.Fatal("Service - CreateCostumer error : ", errCreate)
+		log.Println("Service - CreateCostumer error : ", errCreate)
 	}
 
 	return nil

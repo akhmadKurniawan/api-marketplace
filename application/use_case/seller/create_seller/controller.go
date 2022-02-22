@@ -31,12 +31,12 @@ func (h *CreateSellerHandler) CreateSeller(c *gin.Context) {
 	role, _ := strconv.Atoi(accRole)
 
 	if err := c.ShouldBind(&req); err != nil {
-		log.Fatal("Controller - CreateSeller error while binding request : ", err)
+		log.Println("Controller - CreateSeller error while binding request : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
 	if ok, err := ValidateRequest(&req); !ok {
-		log.Fatal("Controller - CreateSeller error validation : ", err)
+		log.Println("Controller - CreateSeller error validation : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
@@ -48,7 +48,7 @@ func (h *CreateSellerHandler) CreateSeller(c *gin.Context) {
 	} else {
 		errCreate := h.sellerService.CreateSeller(ctx, req, id)
 		if errCreate != nil {
-			log.Fatal("Controller - CreateSeller error while access service : ", errCreate)
+			log.Println("Controller - CreateSeller error while access service : ", errCreate)
 			c.JSON(500, response.SetMessage(errCreate.Error(), false))
 			return
 		}

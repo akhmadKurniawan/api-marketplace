@@ -24,20 +24,20 @@ func (h *CreateUserHandler) CreateUser(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	if err := c.Bind(&req); err != nil {
-		log.Fatal("Controller - CreateUser error while binding request to json : ", err)
+		log.Println("Controller - CreateUser error while binding request to json : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
 
 	if ok, err := ValidateRequest(&req); !ok {
-		log.Fatal("Controller - CreateUser validation : ", err)
+		log.Println("Controller - CreateUser validation : ", err)
 		c.JSON(http.StatusUnprocessableEntity, response.SetMessage(err.Error(), false))
 		return
 	}
 
 	err := h.userService.CreateUser(ctx, req)
 	if err != nil {
-		log.Fatal("Controller - CreateUser error while accessing service : ", err)
+		log.Println("Controller - CreateUser error while accessing service : ", err)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(err.Error(), false))
 		return
 	}

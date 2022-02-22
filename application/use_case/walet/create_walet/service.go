@@ -19,7 +19,8 @@ func NewCreateWaletService(waletRepo infrastructure.WaletRepository) CreateWalet
 func (s *CreateWaletService) CreateWalet(ctx context.Context, req CreateWaletRequest, userID int) error {
 	errCreate := s.waletRepository.CreateWalet(ctx, RequestMapper(req, userID))
 	if errCreate != nil {
-		log.Fatal("Service - CreateWalet error : ", errCreate)
+		log.Println("Service - CreateWalet error : ", errCreate)
+		return errCreate
 	}
 	return nil
 }

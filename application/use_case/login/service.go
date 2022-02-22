@@ -28,7 +28,7 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	// get username
 	user, errUser := s.userRepository.GetUsername(ctx, req.Username)
 	if errUser != nil {
-		log.Fatal("Service - Login error while access username : ", errUser)
+		log.Println("Service - Login error while access username : ", errUser)
 	}
 
 	byteDBPass := []byte(user.Password)
@@ -36,7 +36,7 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 
 	//compare hash password
 	if error := bcrypt.CompareHashAndPassword(byteDBPass, byteReqPass); error != nil {
-		log.Fatal("Service - Compare hash error : ", error)
+		log.Println("Service - Compare hash error : ", error)
 	}
 
 	//create Claims
@@ -44,11 +44,11 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), claims) // create token
 	signed, err := token.SignedString([]byte("secret"))
 	if err != nil {
-		log.Fatal("Service - SignedToken error : ", err)
+		log.Println("Service - SignedToken error : ", err)
 	}
 	_, errLogin := s.loginRepository.Login(ctx, RequestMapper(user.ID, signed), user.ID)
 	if errLogin != nil {
-		log.Fatal("Service - LoginUser error : ", errLogin)
+		log.Println("Service - LoginUser error : ", errLogin)
 	}
 
 	userId := strconv.FormatUint(uint64(user.ID), 10)
@@ -56,7 +56,7 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	//Get user By Id
 	userData, errGetUser := s.userRepository.GetUserID(ctx, userId)
 	if errGetUser != nil {
-		log.Fatal("Service - GetUserId error : ", err)
+		log.Println("Service - GetUserId error : ", err)
 	}
 
 	return &Response{User: userData}, nil

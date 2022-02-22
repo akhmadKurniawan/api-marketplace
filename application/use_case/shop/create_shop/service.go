@@ -22,12 +22,14 @@ func (s *CreateShopService) CreateShop(ctx context.Context, req CreateShopReques
 	//Get seller By Id
 	seller, errGetSeller := s.sellerRepository.GetSellerByUserID(ctx, req.UserID)
 	if errGetSeller != nil {
-		log.Fatal("Service - GetSellerByUserID error : ", errGetSeller)
+		log.Println("Service - GetSellerByUserID error : ", errGetSeller)
+		return errGetSeller
 	}
 
 	errCreate := s.shopRepository.CreateShop(ctx, RequestMapper(req, seller.ID, img))
 	if errCreate != nil {
-		log.Fatal("Service - CreateShop error : ", errCreate)
+		log.Println("Service - CreateShop error : ", errCreate)
+		return errCreate
 	}
 	return nil
 }

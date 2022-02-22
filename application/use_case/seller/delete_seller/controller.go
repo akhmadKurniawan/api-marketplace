@@ -29,7 +29,7 @@ func (h *DeleteSellerHandler) DeleteSeller(c *gin.Context) {
 
 	err := h.sellerService.DeleteSeller(ctx, id)
 	if err != nil {
-		log.Fatal("Controller - DeleteSeller error while access service : ", err)
+		log.Println("Controller - DeleteSeller error while access service : ", err)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(err.Error(), false))
 		return
 	}

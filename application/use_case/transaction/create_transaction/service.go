@@ -76,8 +76,10 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 	}
 
 	resp, err := virtualaccount.CreateFixedVA(&data)
+	fmt.Println(resp)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Service - CreateTransaction errXendit : ", err)
+		return err
 	}
 	fmt.Printf("created fixed va: %+v\n", resp)
 

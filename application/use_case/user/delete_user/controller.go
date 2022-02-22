@@ -29,7 +29,7 @@ func (h *DeleteUserHandler) DeleteUser(c *gin.Context) {
 
 	err := h.userService.DeleteUser(ctx, id)
 	if err != nil {
-		log.Fatal("Controller - DeleteUser error while access service : ", err)
+		log.Println("Controller - DeleteUser error while access service : ", err)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(err.Error(), false))
 		return
 	}
