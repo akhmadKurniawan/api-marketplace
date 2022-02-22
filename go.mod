@@ -49,6 +49,7 @@ require (
 	github.com/refactory-id/go-core-package v0.0.0-20200316075239-46b5fae45155 // indirect
 	github.com/rubenv/sql-migrate v1.1.1 // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
+	github.com/xendit/xendit-go v1.0.6 // indirect
 	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2 // indirect
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	golang.org/x/text v0.3.7 // indirect

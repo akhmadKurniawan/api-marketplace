@@ -23,20 +23,13 @@ func (repo *TransactionRepository) CreateTransaction(ctx context.Context, transa
 
 	tx := db.Begin()
 
-	err := tx.Create(&transaction).Error
-
-	if err != nil {
+	errCreate := tx.Create(&transaction).Error
+	if errCreate != nil {
 		tx.Rollback()
-		return err
+		return errCreate
 	}
 
 	tx.Commit()
 	return nil
 
-	// errCreate := db.Create(&transaction).Error
-	// if errCreate != nil {
-	// 	return errCreate
-	// }
-
-	// return nil
 }

@@ -26,6 +26,7 @@ func NewCreateTransactionService(transactionRepo infrastructure.TransactionRepos
 }
 
 func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req CreateTransactionRequest) error {
+
 	product, errProduct := s.productRepository.GetProductByID(ctx, req.ProductID)
 	if errProduct != nil {
 		log.Println("Service - CreateTransaction errorProduct : ", errProduct)
@@ -92,7 +93,17 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 	} // get id seller and update the saldo
 
 	req.ProductID = product.ID
-	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req))
+	const typeS string = "Debit"
+	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, totalAmount, typeS, "Pending"))
+	if errCreate != nil {
+		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
+		return errCreate
+	}
+
+	const typeC string = "Kredit"
+
+	mines := +totalAmount
+	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, mines, typeC, "Pending"))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return errCreate
