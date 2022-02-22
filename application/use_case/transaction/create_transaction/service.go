@@ -4,7 +4,12 @@ import (
 	"app/application/infrastructure"
 	"context"
 	"errors"
+	"fmt"
 	"log"
+
+	"github.com/google/uuid"
+	"github.com/xendit/xendit-go"
+	"github.com/xendit/xendit-go/virtualaccount"
 )
 
 type CreateTransactionService struct {
@@ -57,6 +62,25 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 		return errWalet
 	}
 
+	xendit.Opt.SecretKey = "xnd_development_RAQZ4fOZldxhwHXIV87sP98nu14as14RGQukAUreIseV8xo32CqmC5Clqorm6bs"
+	ut := virtualaccount.CreateFixedVAParams{IsSingleUse: func() *bool { b := true; return &b }()}
+	ct := virtualaccount.CreateFixedVAParams{IsClosed: func(b bool) *bool { return &b }(true)}
+	IdVa := "va-" + uuid.New().String()
+	data := virtualaccount.CreateFixedVAParams{
+		ExternalID:     IdVa,
+		BankCode:       "BRI",
+		Name:           "Akhmad Kurniawan",
+		ExpectedAmount: float64(totalAmount),
+		IsClosed:       *&ct.IsClosed,
+		IsSingleUse:    *&ut.IsSingleUse,
+	}
+
+	resp, err := virtualaccount.CreateFixedVA(&data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("created fixed va: %+v\n", resp)
+
 	saldo := walet.Saldo - totalAmount
 	walet.Saldo = saldo
 	_, errUpWalet := s.waletRepository.UpdateWaletSaldo(ctx, req.UserID, walet.Saldo)
@@ -94,7 +118,7 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 
 	req.ProductID = product.ID
 	const typeS string = "Debit"
-	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, totalAmount, typeS, "Pending"))
+	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, totalAmount, typeS, "Pending", IdVa))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return errCreate
@@ -103,7 +127,7 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 	const typeC string = "Kredit"
 
 	mines := +totalAmount
-	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, mines, typeC, "Pending"))
+	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, mines, typeC, "Pending", IdVa))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return errCreate

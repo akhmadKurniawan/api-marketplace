@@ -13,6 +13,7 @@ import (
 	"app/application/use_case/seller/delete_seller"
 	"app/application/use_case/shop/create_shop"
 	"app/application/use_case/transaction/create_transaction"
+	"app/application/use_case/transaction/update_transaction"
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
 	"app/application/use_case/user/update_user"
@@ -75,6 +76,11 @@ func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
 func CreateTransactionHandler(db *gorm.DB) create_transaction.CreateTransactionHandler {
 	wire.Build(create_transaction.NewCreateTransactionHandler, create_transaction.NewCreateTransactionService, repository.NewTransactionRepository, repository.NewProductRepository, repository.NewWaletRepository, repository.NewSellerRepository, repository.NewShopRepository)
 	return create_transaction.CreateTransactionHandler{}
+}
+
+func UpdateTransactionHandler(db *gorm.DB) update_transaction.UpdateTransactionHandler {
+	wire.Build(update_transaction.NewUpdateTransactionHandler, update_transaction.NewUpdateTransactionService, repository.NewTransactionRepository)
+	return update_transaction.UpdateTransactionHandler{}
 }
 
 func CreateWaletHandler(db *gorm.DB) create_walet.CreateWaletHandler {

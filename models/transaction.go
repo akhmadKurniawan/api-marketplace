@@ -9,4 +9,5 @@ type Transaction struct {
 	Status       string `json:"status" db:"status"`
 	Amount       int    `json:"amount" db:"amount"`
 	TotalProduct int    `json:"total_product" db:"total_product"`
+	IdVa         string `json:"id_va"`
 }
