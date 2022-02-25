@@ -1,6 +1,8 @@
 package create_transaction
 
 import (
+	"app/middleware"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -39,12 +41,13 @@ func (h *CreateTransactionHandler) CreateTransaction(c *gin.Context) {
 	}
 
 	req.UserID = userId
-	errCreate := h.transactionService.CreateTransaction(ctx, req)
+	IdVa, errCreate := h.transactionService.CreateTransaction(ctx, req)
 	if errCreate != nil {
 		log.Println("Controller - CreateTransaction error while access service : ", errCreate)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(errCreate.Error(), false))
 		return
 	}
 
-	c.JSON(http.StatusCreated, response.SetMessage("success", true))
+	payment := fmt.Sprintf("https://api.xendit.co/callback_virtual_accounts/external_id=%v/simulate_payment", IdVa)
+	c.JSON(http.StatusCreated, middleware.SetMessage("success", true, payment))
 }

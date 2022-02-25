@@ -135,7 +135,7 @@ func TransactionRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	v1 := route.Group("/transactions")
 	{
 		v1.POST("", crHandler.CreateTransaction)
-		v1.PUT("/:id", upHandler.UpdateTransaction)
+		v1.POST("/:id", upHandler.UpdateTransaction)
 	}
 }
 

@@ -35,7 +35,7 @@ func (repo *TransactionRepository) CreateTransaction(ctx context.Context, transa
 }
 
 func (repo *TransactionRepository) UpdateTransaction(ctx context.Context, transaction models.Transaction, id string) (models.Transaction, error) {
-	db := repo.DB.Debug()
+	db := repo.DB
 	transactionData := models.Transaction{}
 
 	errUpdate := db.Model(&transactionData).Where("id_va = ?", id).Update("status", transaction.Status).Error

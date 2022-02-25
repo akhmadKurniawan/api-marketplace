@@ -19,25 +19,26 @@ func NewLoginRepository(DB *gorm.DB) infrastructure.LoginRepository {
 	}
 }
 
-func (p *loginRepository) Login(ctx context.Context, accessToken models.UserToken, userID int) (models.UserToken, error) {
+func (repo *loginRepository) Login(ctx context.Context, accessToken models.UserToken, userID int) (models.UserToken, error) {
+	db := repo.DB.Debug()
 	accToken := models.UserToken{}
 	user := models.User{}
 	user.LastLoginAt = time.Now()
 
-	errUpUser := p.DB.Model(&user).Where("id = ?", userID).Updates(&user).Error
+	errUpUser := db.Model(&user).Where("id = ?", userID).Updates(&user).Error
 	if errUpUser != nil {
 		return accessToken, errUpUser
 	}
 
-	checkToken := p.DB.Where("user_id = ?", userID).First(&accToken).Error
+	checkToken := db.Where("user_id = ?", userID).First(&accToken).Error
 	if checkToken != nil {
-		err := p.DB.Create(&accessToken).Error
+		err := db.Create(&accessToken).Error
 		if err != nil {
 			return accessToken, err
 		}
 		return accessToken, nil
 	} else {
-		if err := p.DB.Model(&accToken).Where("user_id = ?", userID).Updates(&accessToken).Error; err != nil {
+		if err := db.Model(&accToken).Where("user_id = ?", userID).Updates(&accessToken).Error; err != nil {
 			return accessToken, err
 		}
 		return accessToken, nil

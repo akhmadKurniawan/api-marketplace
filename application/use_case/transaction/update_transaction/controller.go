@@ -22,7 +22,6 @@ func NewUpdateTransactionHandler(transactionServ UpdateTransactionService) Updat
 func (h *UpdateTransactionHandler) UpdateTransaction(c *gin.Context) {
 	id := c.Param("id")
 	request := UpdateTransactionRequest{}
-
 	ctx := c.Request.Context()
 	if ctx == nil {
 		ctx = context.Background()
@@ -34,7 +33,7 @@ func (h *UpdateTransactionHandler) UpdateTransaction(c *gin.Context) {
 	}
 
 	if ok, err := ValidateRequest(&request); !ok {
-		log.Println("Controller - CreateCostumer error validation : ", err)
+		log.Println("Controller - UpdateTransaction error validation : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
@@ -46,5 +45,6 @@ func (h *UpdateTransactionHandler) UpdateTransaction(c *gin.Context) {
 		return
 	}
 
+	// c.JSON(http.StatusCreated, response.SetMessage("success", true))
 	c.JSON(200, SetResponse(res, "Update berhasil", true))
 }

@@ -7,8 +7,13 @@ import (
 )
 
 type UpdateTransactionRequest struct {
-	IdVa   string `json:"id_ve"`
+	IdVa   string `json:"external_id"`
 	Status string `json:"status" db:"status"`
+	Amount int    `json:"amount"`
+}
+
+type Request struct {
+	Amount int `json:"amount"`
 }
 
 func ValidateRequest(req *UpdateTransactionRequest) (bool, error) {
@@ -21,9 +26,11 @@ func ValidateRequest(req *UpdateTransactionRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req UpdateTransactionRequest, status string) models.Transaction {
+func RequestMapper(req UpdateTransactionRequest, message, status string) models.Transaction {
 	return models.Transaction{
-		IdVa:   req.IdVa,
-		Status: status,
+		IdVa:    req.IdVa,
+		Status:  status,
+		Message: message,
+		Amount:  req.Amount,
 	}
 }

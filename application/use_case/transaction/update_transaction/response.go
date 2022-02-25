@@ -8,16 +8,9 @@ import (
 
 type (
 	UpdateTransactionResponseData struct {
-		IdVa   string `json:"id_va"`
-		Status string `json:"status"`
-		// ID           int       `json:"id"`
-		// UserId       int       `json:"user_id"`
-		// ProductId    int       `json:"product_id"`
-		// Description  string    `json:"description"`
-		// Amount       int       `json:"amount"`
-		// TotalProduct int       `json:"total_product"`
-		// CreatedAt    time.Time `json:"created_at"`
-		// UpdatedAt    time.Time `json:"updated_at"`
+		IdVa    string `json:"external_id"`
+		Status  string `json:"status"`
+		Message string `json:"message"`
 	}
 	UpdateTransactionResponse struct {
 		base.BaseResponse
@@ -25,7 +18,9 @@ type (
 	}
 
 	Response struct {
-		Trans models.Transaction
+		Trans   models.Transaction
+		Status  string `json:"status"`
+		Message string `json:"message"`
 	}
 )
 
@@ -41,15 +36,8 @@ func SetResponse(model *Response, message string, success bool) UpdateTransactio
 
 func ResponseMapper(model *Response) UpdateTransactionResponseData {
 	return UpdateTransactionResponseData{
-		IdVa:   model.Trans.IdVa,
-		Status: model.Trans.Status,
-		// ID:           model.Trans.Model.ID,
-		// UserId:       model.Trans.UserID,
-		// ProductId:    model.Trans.ProductID,
-		// Description:  model.Trans.Description,
-		// Amount:       model.Trans.Amount,
-		// TotalProduct: model.Trans.TotalProduct,
-		// CreatedAt:    model.Trans.CreatedAt,
-		// UpdatedAt:    model.Trans.UpdatedAt,
+		IdVa:    model.Trans.IdVa,
+		Status:  model.Trans.Status,
+		Message: model.Trans.Message,
 	}
 }
