@@ -48,6 +48,6 @@ func (h *CreateTransactionHandler) CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	payment := fmt.Sprintf("https://api.xendit.co/callback_virtual_accounts/external_id=%v/simulate_payment", IdVa)
+	payment := fmt.Sprintf("localhost:5000/api/v1/transactions/%v", IdVa)
 	c.JSON(http.StatusCreated, middleware.SetMessage("success", true, payment))
 }

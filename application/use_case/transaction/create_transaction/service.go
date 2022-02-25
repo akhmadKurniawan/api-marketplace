@@ -32,7 +32,6 @@ func NewCreateTransactionService(transactionRepo infrastructure.TransactionRepos
 }
 
 func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req CreateTransactionRequest) (string, error) {
-
 	product, errProduct := s.productRepository.GetProductByID(ctx, req.ProductID)
 	if errProduct != nil {
 		log.Println("Service - CreateTransaction errorProduct : ", errProduct)
@@ -84,13 +83,6 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 
 	fmt.Printf("created fixed va: %+v\n", resp)
 
-	status := "Success"
-	if resp.Status == "PENDING" {
-		status = "Pending"
-	} else {
-		status = "Success"
-	}
-
 	saldo := walet.Saldo - totalAmount
 	walet.Saldo = saldo
 	_, errUpWalet := s.waletRepository.UpdateWaletSaldo(ctx, req.UserID, walet.Saldo)
@@ -128,16 +120,15 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 
 	req.ProductID = product.ID
 	const typeS string = "Debit"
-	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, totalAmount, typeS, status, resp.ExternalID))
+	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, totalAmount, typeS, "PENDING", resp.ExternalID))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return "", errCreate
 	}
 
 	const typeC string = "Kredit"
-
 	mines := +totalAmount
-	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, mines, typeC, status, resp.ExternalID))
+	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, mines, typeC, "PENDING", resp.ExternalID))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return "", errCreate

@@ -18,9 +18,10 @@ type (
 	}
 
 	Response struct {
-		Trans   models.Transaction
-		Status  string `json:"status"`
-		Message string `json:"message"`
+		Trans     models.Transaction
+		Status    string `json:"status"`
+		Message   string `json:"message"`
+		ErrorCode string `json:"error_code"`
 	}
 )
 

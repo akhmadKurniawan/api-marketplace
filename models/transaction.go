@@ -11,4 +11,5 @@ type Transaction struct {
 	TotalProduct int    `json:"total_product" db:"total_product"`
 	IdVa         string `json:"id_va"`
 	Message      string `json:"message" gorm:"-"`
+	ErrorCode    string `json:"error_code" gorm:"-"`
 }
