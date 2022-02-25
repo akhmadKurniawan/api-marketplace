@@ -26,9 +26,9 @@ func ValidateRequest(req *UpdateTransactionRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req UpdateTransactionRequest, message, status string) models.Transaction {
+func RequestMapper(req UpdateTransactionRequest, id, message, status string) models.Transaction {
 	return models.Transaction{
-		IdVa:    req.IdVa,
+		IdVa:    id,
 		Status:  status,
 		Message: message,
 		Amount:  req.Amount,

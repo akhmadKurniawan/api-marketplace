@@ -45,6 +45,5 @@ func (h *UpdateTransactionHandler) UpdateTransaction(c *gin.Context) {
 		return
 	}
 
-	// c.JSON(http.StatusCreated, response.SetMessage("success", true))
 	c.JSON(200, SetResponse(res, "Update berhasil", true))
 }

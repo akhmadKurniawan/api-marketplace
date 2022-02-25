@@ -45,7 +45,6 @@ func (s *UpdateTransactionService) UpdateTransaction(ctx context.Context, req Up
 	}
 
 	defer res.Body.Close()
-	fmt.Println("msg", data.Message)
 	err = json.NewDecoder(res.Body).Decode(&data)
 	if err != nil {
 		return nil, err
@@ -55,7 +54,8 @@ func (s *UpdateTransactionService) UpdateTransaction(ctx context.Context, req Up
 		data.Status = "COMPLETED"
 	}
 
-	trans, errUpdte := s.transactionRepository.UpdateTransaction(ctx, RequestMapper(req, data.Message, data.Status), req.IdVa)
+	data.Trans.IdVa = req.IdVa
+	trans, errUpdte := s.transactionRepository.UpdateTransaction(ctx, RequestMapper(req, data.Trans.IdVa, data.Message, data.Status), req.IdVa)
 	if errUpdte != nil {
 		log.Println("Service - UpdateTransaction error : ", errUpdte)
 		return nil, errUpdte
