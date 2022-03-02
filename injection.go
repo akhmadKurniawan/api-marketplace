@@ -8,6 +8,7 @@ import (
 	"app/application/use_case/costumer/create_costumer"
 	"app/application/use_case/login"
 	"app/application/use_case/product/create_product"
+	"app/application/use_case/product/get_product_shopid"
 	"app/application/use_case/product_type/create_product_type"
 	"app/application/use_case/seller/create_seller"
 	"app/application/use_case/seller/delete_seller"
@@ -61,6 +62,11 @@ func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
 func CreateProductHandler(db *gorm.DB) create_product.CreateProductHandler {
 	wire.Build(create_product.NewCreateProductHandler, create_product.NewCreateProductService, repository.NewProductRepository, repository.NewShopRepository, repository.NewProductTypeRepository)
 	return create_product.CreateProductHandler{}
+}
+
+func ShowProductByShopIDHandler(db *gorm.DB) get_product_shopid.ShowProductByShopIDHandler {
+	wire.Build(get_product_shopid.NewShowProductByShopIDHandler, get_product_shopid.NewShowProductByShopIDService, repository.NewProductRepository)
+	return get_product_shopid.ShowProductByShopIDHandler{}
 }
 
 func CreateProductTypeHandler(db *gorm.DB) create_product_type.CreateProductTypeHandler {

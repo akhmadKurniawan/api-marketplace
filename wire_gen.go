@@ -11,6 +11,7 @@ import (
 	"app/application/use_case/costumer/create_costumer"
 	"app/application/use_case/login"
 	"app/application/use_case/product/create_product"
+	"app/application/use_case/product/get_product_shopid"
 	"app/application/use_case/product_type/create_product_type"
 	"app/application/use_case/seller/create_seller"
 	"app/application/use_case/seller/delete_seller"
@@ -85,6 +86,13 @@ func CreateProductHandler(db *gorm.DB) create_product.CreateProductHandler {
 	createProductService := create_product.NewCreateProductService(productRepository, shopRepository, productTypeRepository)
 	createProductHandler := create_product.NewCreateProductHandler(createProductService)
 	return createProductHandler
+}
+
+func ShowProductByShopIDHandler(db *gorm.DB) get_product_shopid.ShowProductByShopIDHandler {
+	productRepository := repository.NewProductRepository(db)
+	showProductByShopIDService := get_product_shopid.NewShowProductByShopIDService(productRepository)
+	showProductByShopIDHandler := get_product_shopid.NewShowProductByShopIDHandler(showProductByShopIDService)
+	return showProductByShopIDHandler
 }
 
 func CreateProductTypeHandler(db *gorm.DB) create_product_type.CreateProductTypeHandler {

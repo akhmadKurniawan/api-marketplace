@@ -92,10 +92,11 @@ func LoginRoutes(route *gin.RouterGroup, db *gorm.DB) {
 
 func ProductRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	crHandler := CreateProductHandler(db)
-
+	getShopIdHandler := ShowProductByShopIDHandler(db)
 	v1 := route.Group("/products")
 	{
 		v1.POST("", crHandler.CreateProduct)
+		v1.GET("/:id", getShopIdHandler.ShowProductByShopID)
 	}
 }
 
