@@ -104,6 +104,7 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 		return "", errSeller
 	}
 
+	fmt.Println(seller.UserID)
 	waletSeller, errSellerWalet := s.waletRepository.GetWaletByUserID(ctx, seller.UserID)
 	if errSellerWalet != nil {
 		log.Println("Service - CreateTransaction errorSellerWalet : ", errSellerWalet)

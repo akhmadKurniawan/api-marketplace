@@ -24,7 +24,7 @@ import (
 )
 
 func CreateUserHandler(db *gorm.DB) create_user.CreateUserHandler {
-	wire.Build(create_user.NewCreateUserHandler, create_user.NewCreateUserService, repository.NewUserRepository)
+	wire.Build(create_user.NewCreateUserHandler, create_user.NewCreateUserService, repository.NewUserRepository, repository.NewSellerRepository, repository.NewCostumerRepository)
 	return create_user.CreateUserHandler{}
 }
 

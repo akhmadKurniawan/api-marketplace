@@ -12,10 +12,6 @@ type UpdateTransactionRequest struct {
 	Amount int    `json:"amount"`
 }
 
-type Request struct {
-	Amount int `json:"amount"`
-}
-
 func ValidateRequest(req *UpdateTransactionRequest) (bool, error) {
 	validate := validator.New()
 	err := validate.Struct(req)

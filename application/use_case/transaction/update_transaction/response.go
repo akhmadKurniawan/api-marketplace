@@ -2,8 +2,6 @@ package update_transaction
 
 import (
 	"app/models"
-
-	base "github.com/refactory-id/go-core-package/response"
 )
 
 type (
@@ -13,7 +11,6 @@ type (
 		Message string `json:"message"`
 	}
 	UpdateTransactionResponse struct {
-		base.BaseResponse
 		Data UpdateTransactionResponseData
 	}
 
@@ -25,12 +22,8 @@ type (
 	}
 )
 
-func SetResponse(model *Response, message string, success bool) UpdateTransactionResponse {
+func SetResponse(model *Response) UpdateTransactionResponse {
 	return UpdateTransactionResponse{
-		BaseResponse: base.BaseResponse{
-			Message: message,
-			Success: success,
-		},
 		Data: ResponseMapper(model),
 	}
 }

@@ -28,7 +28,9 @@ import (
 
 func CreateUserHandler(db *gorm.DB) create_user.CreateUserHandler {
 	userRepository := repository.NewUserRepository(db)
-	createUserService := create_user.NewCreateUserService(userRepository)
+	sellerRepository := repository.NewSellerRepository(db)
+	costumerRepository := repository.NewCostumerRepository(db)
+	createUserService := create_user.NewCreateUserService(userRepository, sellerRepository, costumerRepository)
 	createUserHandler := create_user.NewCreateUserHandler(createUserService)
 	return createUserHandler
 }

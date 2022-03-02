@@ -7,7 +7,6 @@ import (
 )
 
 type UpdateUserRequest struct {
-	Name     string `json:"name"`
 	Username string `json:"username" validate:"required"`
 	Password string `json:"password" validate:"required"`
 	Role     int    `json:"role"`
@@ -25,7 +24,6 @@ func ValidateRequest(req *UpdateUserRequest) (bool, error) {
 
 func RequestMapper(req UpdateUserRequest, username string, password string) models.User {
 	return models.User{
-		Name:     req.Name,
 		Username: username,
 		Password: password,
 		Role:     req.Role,

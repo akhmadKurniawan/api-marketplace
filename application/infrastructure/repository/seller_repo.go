@@ -21,13 +21,29 @@ func NewSellerRepository(db *gorm.DB) infrastructure.SellerRepository {
 }
 
 func (repo *SellerRepository) CreateSeller(ctx context.Context, seller models.Seller) error {
-	db := repo.DB
+	db := repo.DB.Debug()
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
 
-	errCreate := db.Create(&seller).Error
-	if errCreate != nil {
-		return errCreate
+	if err := tx.Error; err != nil {
+		return err
 	}
-	return nil
+	if err := tx.Create(&seller).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// errCreate := db.Create(&seller).Error
+	// if errCreate != nil {
+	// 	return errCreate
+	// }
+	// return nil
+
+	return tx.Commit().Error
 }
 
 func (repo *SellerRepository) GetSellerByID(ctx context.Context, id int) (models.Seller, error) {

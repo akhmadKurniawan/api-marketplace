@@ -22,6 +22,7 @@ func NewUpdateTransactionHandler(transactionServ UpdateTransactionService) Updat
 func (h *UpdateTransactionHandler) UpdateTransaction(c *gin.Context) {
 	id := c.Param("id")
 	request := UpdateTransactionRequest{}
+
 	ctx := c.Request.Context()
 	if ctx == nil {
 		ctx = context.Background()
@@ -45,5 +46,5 @@ func (h *UpdateTransactionHandler) UpdateTransaction(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, SetResponse(res, "Update berhasil", true))
+	c.JSON(200, SetResponse(res))
 }

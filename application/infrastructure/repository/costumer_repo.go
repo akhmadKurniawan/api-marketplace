@@ -19,14 +19,28 @@ func NewCostumerRepository(db *gorm.DB) infrastructure.CostumerRepository {
 }
 
 func (repo *CostumerRepository) CreateCostumer(ctx context.Context, costumer models.Costumer) error {
-	db := repo.DB
+	db := repo.DB.Debug()
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
 
-	userID := db.Where("user_id = ?", costumer.UserID).Take(&costumer).Error
-	if userID != nil {
-		db.Create(&costumer)
+	if err := tx.Error; err != nil {
+		return err
+	}
+	if err := tx.Create(&costumer).Error; err != nil {
+		tx.Rollback()
+		return err
 	}
 
-	return nil
+	// userID := db.Where("user_id = ?", costumer.UserID).Take(&costumer).Error
+	// if userID != nil {
+	// 	db.Create(&costumer)
+	// }
+	// return nil
+	return tx.Commit().Error
 }
 
 func (repo *CostumerRepository) GetCostumerByUserId(ctx context.Context, id int) (models.Costumer, error) {
