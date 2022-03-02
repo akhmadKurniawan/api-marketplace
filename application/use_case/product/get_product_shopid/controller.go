@@ -21,6 +21,7 @@ func NewShowProductByShopIDHandler(productByShopIDServ ShowProductByShopIDServic
 
 func (h *ShowProductByShopIDHandler) ShowProductByShopID(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+
 	res, err := h.ProductByShopIDService.ShowProductByShopID(c.Request.Context(), id)
 	if err != nil {
 		log.Println("ProductController - ShowProductByShopID error while access service :", err)

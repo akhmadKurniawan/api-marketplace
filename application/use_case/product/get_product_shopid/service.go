@@ -17,28 +17,25 @@ func NewShowProductByShopIDService(productRepo infrastructure.ProductRepository)
 	}
 }
 
-func (s *ShowProductByShopIDService) ShowProductByShopID(ctx context.Context, id int) (*ShowProductByShopIDResponseData, error) {
+func (s *ShowProductByShopIDService) ShowProductByShopID(ctx context.Context, id int) (*Response, error) {
 	product, err := s.productRepository.GetProductByShopID(ctx, id)
 	if err != nil {
 		log.Println("ProductService - ShowProductByShopID error :", err)
 		return nil, err
 	}
 
-	if err != nil || product.ID == 0 {
+	var data []ShowProductByShopIDResponseData
+	for _, val := range product {
+		res := ShowProductByShopIDResponseData{
+			ShopID: val.ShopId,
+		}
+		data = append(data, res)
+	}
+
+	if err != nil || data == nil {
 		err = errors.New("product not found")
 		return nil, err
 	}
 
-	res := ShowProductByShopIDResponseData{
-		ID:          product.ID,
-		ProductType: product.ProductType,
-		ShopID:      product.ShopId,
-		Name:        product.Name,
-		Price:       product.Price,
-		Description: product.Description,
-		Qty:         product.Qty,
-		Image:       product.Image,
-	}
-
-	return &res, nil
+	return &Response{Product: product}, nil
 }

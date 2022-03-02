@@ -29,15 +29,16 @@ func (repo *ProductRepository) CreateProduct(ctx context.Context, product models
 	return nil
 }
 
-func (repo *ProductRepository) GetProductByShopID(ctx context.Context, id int) (*models.Product, error) {
+func (repo *ProductRepository) GetProductByShopID(ctx context.Context, id int) ([]models.Product, error) {
 	db := repo.DB
-	product := models.Product{}
+	product := []models.Product{}
 
 	errGet := db.Where("shop_id = ?", id).Find(&product).Error
 	if errGet != nil {
 		return nil, errGet
 	}
-	return &product, nil
+
+	return product, nil
 }
 
 func (repo *ProductRepository) GetProductByID(ctx context.Context, id int) (models.Product, error) {
