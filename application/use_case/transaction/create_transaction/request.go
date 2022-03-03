@@ -25,7 +25,7 @@ func ValidateRequest(req *CreateTransactionRequest) (bool, error) {
 	}
 	return true, nil
 }
-func RequestMapper(req CreateTransactionRequest, amount int, typeE string, status string, IdVa string) models.Transaction {
+func RequestMapper(req CreateTransactionRequest, amount int, typeE string, status string, IdVa string, tp int) models.Transaction {
 	return models.Transaction{
 		UserID:       req.UserID,
 		ProductID:    req.ProductID,
@@ -33,7 +33,7 @@ func RequestMapper(req CreateTransactionRequest, amount int, typeE string, statu
 		Description:  req.Description,
 		Status:       status,
 		Amount:       amount,
-		TotalProduct: req.TotalProduct,
+		TotalProduct: tp,
 		IdVa:         IdVa,
 	}
 }

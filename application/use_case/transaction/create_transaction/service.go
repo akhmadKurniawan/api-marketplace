@@ -104,7 +104,6 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 		return "", errSeller
 	}
 
-	fmt.Println(seller.UserID)
 	waletSeller, errSellerWalet := s.waletRepository.GetWaletByUserID(ctx, seller.UserID)
 	if errSellerWalet != nil {
 		log.Println("Service - CreateTransaction errorSellerWalet : ", errSellerWalet)
@@ -119,15 +118,16 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 		return "", errUpWalet
 	} // get id seller and update the saldo
 
+	debit := totalAmount - (totalAmount + totalAmount)
 	req.ProductID = product.ID
-	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, totalAmount, "Debit", "PENDING", resp.ExternalID))
+	tp := req.TotalProduct - (req.TotalProduct + req.TotalProduct)
+	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, debit, "Debit", "PENDING", resp.ExternalID, tp))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return "", errCreate
 	}
 
-	mines := +totalAmount
-	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapperK(req, mines, "Kredit", "PENDING", resp.ExternalID, seller.UserID))
+	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapperK(req, totalAmount, "Kredit", "PENDING", resp.ExternalID, seller.UserID))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return "", errCreate
