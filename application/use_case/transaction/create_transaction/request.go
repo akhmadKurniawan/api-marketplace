@@ -37,3 +37,15 @@ func RequestMapper(req CreateTransactionRequest, amount int, typeE string, statu
 		IdVa:         IdVa,
 	}
 }
+func RequestMapperK(req CreateTransactionRequest, amount int, typeE string, status string, IdVa string, id int) models.Transaction {
+	return models.Transaction{
+		UserID:       id,
+		ProductID:    req.ProductID,
+		Type:         typeE,
+		Description:  req.Description,
+		Status:       status,
+		Amount:       amount,
+		TotalProduct: req.TotalProduct,
+		IdVa:         IdVa,
+	}
+}
