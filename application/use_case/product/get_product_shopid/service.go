@@ -60,16 +60,15 @@ func (s *ShowProductByShopIDService) ShowProductByShopID(ctx context.Context, id
 			fmt.Println(err)
 			return nil, err
 		}
-		fmt.Println("Save")
 
+		fmt.Println("Save")
 		return &Response{Product: product}, nil
 
 	} else if err != nil {
 		fmt.Printf("error calling redis: %v\n", err)
 		return nil, err
 	} else {
-
-		err = json.Unmarshal([]byte(value), &data)
+		err = json.Unmarshal([]byte(value), &product)
 		if err != nil {
 			return nil, err
 		}
