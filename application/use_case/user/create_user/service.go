@@ -4,6 +4,7 @@ import (
 	"app/application/infrastructure"
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"
@@ -31,7 +32,8 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		return errHash
 	}
 
-	user, errUser := s.userRepository.GetUsername(ctx, req.Username)
+	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
+	fmt.Println(user.ID)
 	if errUser != nil {
 		log.Println("Service - CreateUser error : ", errUser)
 		return errUser
@@ -41,21 +43,23 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		return errUser
 	}
 
-	reqUser, reqSeller, reqCostumer := RequestMapper(req, string(hashedPassword))
+	reqUser := RequestMapper(req, string(hashedPassword))
 
-	err := s.costumerRepository.CreateCostumer(ctx, reqCostumer)
+	cUser, err := s.userRepository.SignUpUser(ctx, reqUser)
+	if err != nil {
+		log.Println("Service - CreateUser error : ", err)
+		return err
+	}
+
+	reqSeller, reqCostumer := RequestMappers(req, cUser.ID)
+
+	err = s.costumerRepository.CreateCostumer(ctx, reqCostumer)
 	if err != nil {
 		log.Println("Service - CreateUser error : ", err)
 		return err
 	}
 
 	err = s.sellerRepository.CreateSeller(ctx, reqSeller)
-	if err != nil {
-		log.Println("Service - CreateUser error : ", err)
-		return err
-	}
-
-	err = s.userRepository.SignUpUser(ctx, reqUser)
 	if err != nil {
 		log.Println("Service - CreateUser error : ", err)
 		return err

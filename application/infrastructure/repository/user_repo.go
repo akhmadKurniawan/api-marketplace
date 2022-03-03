@@ -21,7 +21,7 @@ func NewUserRepository(db *gorm.DB) infrastructure.UserRepository {
 	}
 }
 
-func (repo *UserRepository) SignUpUser(ctx context.Context, user models.User) error {
+func (repo *UserRepository) SignUpUser(ctx context.Context, user models.User) (models.User, error) {
 	db := repo.DB.Debug()
 	user.LastLoginAt = time.Now()
 
@@ -33,18 +33,14 @@ func (repo *UserRepository) SignUpUser(ctx context.Context, user models.User) er
 	}()
 
 	if err := tx.Error; err != nil {
-		return err
+		return models.User{}, err
 	}
 	if err := tx.Create(&user).Error; err != nil {
 		tx.Rollback()
-		return err
+		return models.User{}, err
 	}
-	// errCreate := db.Create(&user).Error
-	// if errCreate != nil {
-	// 	return errCreate
-	// }
-	// return nil
-	return tx.Commit().Error
+
+	return user, tx.Commit().Error
 
 }
 
@@ -63,6 +59,19 @@ func (repo *UserRepository) GetUserID(ctx context.Context, id string) (models.Us
 }
 
 func (repo *UserRepository) GetUsername(ctx context.Context, username string) (models.User, error) {
+	db := repo.DB.Debug()
+	userData := models.User{}
+
+	if err := db.Where("username = ?", username).First(&userData).Error; err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Println("Repository - GetUsername Error : ", err)
+		}
+		return userData, err
+	}
+	return userData, nil
+}
+
+func (repo *UserRepository) GetAllUsername(ctx context.Context, username string) (models.User, error) {
 	db := repo.DB.Debug()
 	userData := models.User{}
 

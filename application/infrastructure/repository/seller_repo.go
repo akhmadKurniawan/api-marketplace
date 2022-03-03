@@ -37,12 +37,6 @@ func (repo *SellerRepository) CreateSeller(ctx context.Context, seller models.Se
 		return err
 	}
 
-	// errCreate := db.Create(&seller).Error
-	// if errCreate != nil {
-	// 	return errCreate
-	// }
-	// return nil
-
 	return tx.Commit().Error
 }
 

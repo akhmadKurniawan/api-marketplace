@@ -24,24 +24,43 @@ func ValidateRequest(req *CreateUserRequest) (bool, error) {
 	return true, nil
 }
 
-func RequestMapper(req CreateUserRequest, password string) (models.User, models.Seller, models.Costumer) {
-	reqUser := models.User{
-		Username: req.Username,
-		Password: password,
-		Role:     req.Role,
-	}
-
+func RequestMappers(req CreateUserRequest, id int) (models.Seller, models.Costumer) {
 	reqSeller := models.Seller{
+		UserID: id,
 		Name:   req.Name,
 		Alamat: req.Alamat,
 		NoHp:   req.NoHp,
 	}
 
 	reqCostumer := models.Costumer{
+		UserID: id,
 		Name:   req.Name,
 		Alamat: req.Alamat,
 		NoHp:   req.NoHp,
 	}
+	return reqSeller, reqCostumer
+}
 
-	return reqUser, reqSeller, reqCostumer
+func RequestMapper(req CreateUserRequest, password string) models.User {
+	reqUser := models.User{
+		Username: req.Username,
+		Password: password,
+		Role:     req.Role,
+	}
+
+	// reqSeller := models.Seller{
+	// 	UserID: id,
+	// 	Name:   req.Name,
+	// 	Alamat: req.Alamat,
+	// 	NoHp:   req.NoHp,
+	// }
+
+	// reqCostumer := models.Costumer{
+	// 	UserID: id,
+	// 	Name:   req.Name,
+	// 	Alamat: req.Alamat,
+	// 	NoHp:   req.NoHp,
+	// }
+
+	return reqUser
 }

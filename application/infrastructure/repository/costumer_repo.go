@@ -35,11 +35,6 @@ func (repo *CostumerRepository) CreateCostumer(ctx context.Context, costumer mod
 		return err
 	}
 
-	// userID := db.Where("user_id = ?", costumer.UserID).Take(&costumer).Error
-	// if userID != nil {
-	// 	db.Create(&costumer)
-	// }
-	// return nil
 	return tx.Commit().Error
 }
 
