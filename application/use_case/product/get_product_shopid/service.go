@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -47,20 +48,33 @@ func (s *ShowProductByShopIDService) ShowProductByShopID(ctx context.Context, id
 		DB:       0,
 	})
 
-	json, err := json.Marshal(product)
-	if err != nil {
-		fmt.Println(err)
-	}
+	value, err := client.Get(ctx, "one").Result()
+	if err == redis.Nil {
+		mars, err := json.Marshal(product)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		err = client.Set(ctx, "one", mars, time.Second*15).Err()
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		fmt.Println("Save")
 
-	err = client.Set(ctx, "one", json, 0).Err()
-	if err != nil {
-		fmt.Println(err)
-	}
-	val, err := client.Get(ctx, "one").Result()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("redis", val)
+		return &Response{Product: product}, nil
 
-	return &Response{Product: product}, nil
+	} else if err != nil {
+		fmt.Printf("error calling redis: %v\n", err)
+		return nil, err
+	} else {
+
+		err = json.Unmarshal([]byte(value), &data)
+		if err != nil {
+			return nil, err
+		}
+
+		fmt.Println("Done")
+		return &Response{Product: product}, nil
+	}
 }
