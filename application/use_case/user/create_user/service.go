@@ -4,6 +4,7 @@ import (
 	"app/application/infrastructure"
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"
@@ -49,18 +50,22 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 	}
 
 	reqSeller, reqCostumer := RequestMappers(req, cUser.ID)
+	if err != nil || cUser.Role < 2 {
+		fmt.Println(cUser.Role)
+		err = s.costumerRepository.CreateCostumer(ctx, reqCostumer)
+		if err != nil {
+			log.Println("Service - CreateUser error : ", err)
+			return err
+		}
 
-	err = s.costumerRepository.CreateCostumer(ctx, reqCostumer)
-	if err != nil {
-		log.Println("Service - CreateUser error : ", err)
 		return err
-	}
+	} else {
+		err = s.sellerRepository.CreateSeller(ctx, reqSeller)
+		if err != nil {
+			log.Println("Service - CreateUser error : ", err)
+			return err
+		}
 
-	err = s.sellerRepository.CreateSeller(ctx, reqSeller)
-	if err != nil {
-		log.Println("Service - CreateUser error : ", err)
-		return err
+		return nil
 	}
-
-	return nil
 }
