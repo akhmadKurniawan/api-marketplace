@@ -4,7 +4,6 @@ import (
 	"app/application/infrastructure"
 	"context"
 	"errors"
-	"fmt"
 	"log"
 
 	"golang.org/x/crypto/bcrypt"
@@ -33,7 +32,6 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 	}
 
 	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
-	fmt.Println(user.ID)
 	if errUser != nil {
 		log.Println("Service - CreateUser error : ", errUser)
 		return errUser
@@ -43,8 +41,7 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		return errUser
 	}
 
-	reqUser := RequestMapper(req, string(hashedPassword))
-
+	reqUser := RequestMapper(req, string(hashedPassword), "Inactivated")
 	cUser, err := s.userRepository.SignUpUser(ctx, reqUser)
 	if err != nil {
 		log.Println("Service - CreateUser error : ", err)

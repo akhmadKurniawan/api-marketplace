@@ -7,9 +7,11 @@ import (
 )
 
 type CreateUserRequest struct {
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Username string `json:"username" validate:"required,min=5"`
+	Password string `json:"password" validate:"required,min=8"`
 	Role     int    `json:"role" gorm:"default:1"`
+	Status   string `json:"status"`
 	Name     string `json:"name"`
 	Alamat   string `json:"alamat"`
 	NoHp     string `json:"no_hp"`
@@ -41,26 +43,13 @@ func RequestMappers(req CreateUserRequest, id int) (models.Seller, models.Costum
 	return reqSeller, reqCostumer
 }
 
-func RequestMapper(req CreateUserRequest, password string) models.User {
+func RequestMapper(req CreateUserRequest, password, status string) models.User {
 	reqUser := models.User{
+		Email:    req.Email,
 		Username: req.Username,
 		Password: password,
 		Role:     req.Role,
+		Status:   status,
 	}
-
-	// reqSeller := models.Seller{
-	// 	UserID: id,
-	// 	Name:   req.Name,
-	// 	Alamat: req.Alamat,
-	// 	NoHp:   req.NoHp,
-	// }
-
-	// reqCostumer := models.Costumer{
-	// 	UserID: id,
-	// 	Name:   req.Name,
-	// 	Alamat: req.Alamat,
-	// 	NoHp:   req.NoHp,
-	// }
-
 	return reqUser
 }

@@ -4,6 +4,8 @@ import (
 	"app/application/infrastructure"
 	"app/middleware"
 	"context"
+	"errors"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -26,18 +28,20 @@ func NewLoginService(loginRepo infrastructure.LoginRepository, userRepo infrastr
 
 func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Response, error) {
 	// get username
-	user, errUser := s.userRepository.GetUsername(ctx, req.Username)
+	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
 	if errUser != nil {
 		log.Println("Service - Login error while access username : ", errUser)
+		return nil, errUser
 	}
-
 	byteDBPass := []byte(user.Password)
 	byteReqPass := []byte(req.Password)
 
 	//compare hash password
 	if error := bcrypt.CompareHashAndPassword(byteDBPass, byteReqPass); error != nil {
 		log.Println("Service - Compare hash error : ", error)
+		return nil, error
 	}
+	fmt.Println("tes")
 
 	//create Claims
 	claims := middleware.CreateClaims(uint64(user.ID), user.Username, user.Role, time.Duration(64))
@@ -45,10 +49,12 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	signed, err := token.SignedString([]byte("secret"))
 	if err != nil {
 		log.Println("Service - SignedToken error : ", err)
+		return nil, err
 	}
 	_, errLogin := s.loginRepository.Login(ctx, RequestMapper(user.ID, signed), user.ID)
 	if errLogin != nil {
 		log.Println("Service - LoginUser error : ", errLogin)
+		return nil, errLogin
 	}
 
 	userId := strconv.FormatUint(uint64(user.ID), 10)
@@ -57,6 +63,11 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	userData, errGetUser := s.userRepository.GetUserID(ctx, userId)
 	if errGetUser != nil {
 		log.Println("Service - GetUserId error : ", err)
+		return nil, errGetUser
+	}
+	if errGetUser != nil || userData.Status == "Inactivated" {
+		errGetUser = errors.New("please activate your account")
+		return nil, errGetUser
 	}
 
 	return &Response{User: userData}, nil
