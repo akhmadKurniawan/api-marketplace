@@ -16,6 +16,7 @@ var dB *gorm.DB
 
 // DBInit create connection to database
 func DBInit() *gorm.DB {
+	fmt.Println("ok")
 	e := godotenv.Load() //Load .env file
 	if e != nil {
 		fmt.Print(e)
@@ -27,10 +28,17 @@ func DBInit() *gorm.DB {
 	password := os.Getenv("DATABASE_PASSWORD")
 	dbName := os.Getenv("DATABASE_NAME")
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=%s", username, password, host, port, dbName, "Asia%2FJakarta")
-
+	fmt.Println(host)
+	fmt.Println(port)
+	fmt.Println(username)
+	fmt.Println(password)
+	fmt.Println(dbName)
+	fmt.Println(dsn)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
+	fmt.Println(db)
+	fmt.Println("err", err)
 	if err != nil {
 		log.Panic("failed to connect to database")
 	}

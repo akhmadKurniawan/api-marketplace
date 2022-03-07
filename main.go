@@ -45,6 +45,7 @@ func main() {
 		log.Fatal(fmt.Sprintf("PORT must be set [%s]", port))
 	}
 
+	fmt.Println("Success")
 	r.Run(":" + port)
 }
 

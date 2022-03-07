@@ -27,15 +27,18 @@ func (h *CreateShopHandler) CreateShop(c *gin.Context) {
 	acc, _ := c.Get("UserId")
 	accountID := strconv.FormatInt(acc.(int64), 10)
 	userID, _ := strconv.Atoi(accountID)
+	r, _ := c.Get("Role")
+	accRole := strconv.FormatInt(r.(int64), 10)
+	role, _ := strconv.Atoi(accRole)
 
 	if err := c.ShouldBind(&req); err != nil {
-		log.Fatal("Controller - CreateShop error while binding request : ", err)
+		log.Println("Controller - CreateShop error while binding request : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
 
 	if ok, err := ValidateRequest(&req); !ok {
-		log.Fatal("Controller - CreateShop error validation : ", err)
+		log.Println("Controller - CreateShop error validation : ", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
@@ -49,12 +52,20 @@ func (h *CreateShopHandler) CreateShop(c *gin.Context) {
 	}
 
 	req.UserID = userID
-	errCreate := h.shopService.CreateShop(ctx, req, file.FileUrl)
-	if errCreate != nil {
-		log.Fatal("Controller - CreateShop error while access service : ", errCreate)
-		c.JSON(500, response.SetMessage(errCreate.Error(), false))
+
+	if role < 2 {
+		log.Println("Controller - CreateShop: you cannt create shop")
+		c.JSON(400, response.SetMessage("Controller - CreateShop: you cannt create shop", false))
 		return
+	} else {
+		errCreate := h.shopService.CreateShop(ctx, req, file.FileUrl)
+		if errCreate != nil {
+			log.Println("Controller - CreateShop error while access service : ", errCreate)
+			c.JSON(500, response.SetMessage(errCreate.Error(), false))
+			return
+		}
+
+		c.JSON(http.StatusCreated, response.SetMessage("success", true))
 	}
 
-	c.JSON(http.StatusCreated, response.SetMessage("success", true))
 }

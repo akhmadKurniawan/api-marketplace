@@ -2,7 +2,6 @@ package create_product_type
 
 import (
 	"app/middleware"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -49,9 +48,9 @@ func (h *CreateProductTypeHandler) CreateProductType(c *gin.Context) {
 		}
 	}
 
-	if role < 2 {
-		fmt.Println("you cannt create seller")
-		c.JSON(400, response.SetMessage("you cannt create seller", false))
+	if role < 3 {
+		log.Println("Controller - CreateProductType: you cannt create product type")
+		c.JSON(400, response.SetMessage("Controller - CreateProductType: you cannt create product type", false))
 		return
 	} else {
 		errCreate := h.productTypeService.CreateProductType(ctx, req, file.FileUrl)
