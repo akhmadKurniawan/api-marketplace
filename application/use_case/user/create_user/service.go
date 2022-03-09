@@ -2,14 +2,13 @@ package create_user
 
 import (
 	"app/application/infrastructure"
+	"app/shared"
 	"context"
 	"errors"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
-	mailgun "github.com/mailgun/mailgun-go/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -35,6 +34,9 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		return errHash
 	}
 
+	go shared.SendMailgun(req.Email) // akan jalan dibelakang layar jadi error di function ini akan di skip
+	time.Sleep(3 * time.Second)      // menunggu proses goroutine selama 5 detik
+
 	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
 	if errUser != nil {
 		log.Println("Service - CreateUser error : ", errUser)
@@ -44,35 +46,6 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		errUser = errors.New("username already exists")
 		return errUser
 	}
-
-	// MAIL GUN
-	privateAPIKey := os.Getenv("MAILGUN_API_KEY")
-	var Domain string = os.Getenv("MAILGUN_DOMAIN")
-
-	mg := mailgun.NewMailgun(Domain, privateAPIKey)
-
-	sender := "sender@example.com"
-	subject := "Fancy subject!"
-	body := "Hello from Mailgun Go!"
-	recipient := req.Email
-
-	fmt.Println(recipient)
-
-	// The message object allows you to add attachments and Bcc recipients
-	message := mg.NewMessage(sender, subject, body, recipient)
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	// Send the message with a 10 second timeout
-	resp, id, err := mg.Send(ctx, message)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("ID: %s Resp: %s\n", id, resp)
-	// Mail Gun
 
 	reqUser := RequestMapper(req, string(hashedPassword), "Inactivated")
 	cUser, err := s.userRepository.SignUpUser(ctx, reqUser)
