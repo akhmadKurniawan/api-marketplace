@@ -5,7 +5,6 @@ import (
 	"app/middleware"
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -41,7 +40,6 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 		log.Println("Service - Compare hash error : ", error)
 		return nil, error
 	}
-	fmt.Println("tes")
 
 	//create Claims
 	claims := middleware.CreateClaims(uint64(user.ID), user.Username, user.Role, time.Duration(64))
@@ -71,4 +69,5 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	}
 
 	return &Response{User: userData}, nil
+
 }

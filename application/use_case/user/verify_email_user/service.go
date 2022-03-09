@@ -17,7 +17,7 @@ func NewVerifyEmailUserService(userRepo infrastructure.UserRepository) VerifyEma
 }
 
 func (s *VerifyEmailUserService) VerifyEmailUser(ctx context.Context, id string, req VerifyEmailUserRequest) error {
-
+	req.Status = "Activated"
 	errVerify := s.UserRepository.VerifyEmailUser(ctx, id, RequestMapper(req))
 	if errVerify != nil {
 		log.Println("Service - VerifyEmailUser error :", errVerify)

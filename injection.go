@@ -18,6 +18,7 @@ import (
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
 	"app/application/use_case/user/update_user"
+	"app/application/use_case/user/verify_email_user"
 	"app/application/use_case/walet/create_walet"
 
 	"github.com/google/wire"
@@ -37,6 +38,11 @@ func UpdateUserHandler(db *gorm.DB) update_user.UpdateUserHandler {
 func DeleteUserHandler(db *gorm.DB) delete_user.DeleteUserHandler {
 	wire.Build(delete_user.NewDeleteUserHandler, delete_user.NewDeleteUserService, repository.NewUserRepository)
 	return delete_user.DeleteUserHandler{}
+}
+
+func VerifyEmailUserHandler(db *gorm.DB) verify_email_user.VerifyEmailUserHandler {
+	wire.Build(verify_email_user.NewVerifyEmailUserHandler, verify_email_user.NewVerifyEmailUserService, repository.NewUserRepository)
+	return verify_email_user.VerifyEmailUserHandler{}
 }
 
 func LoginHandler(db *gorm.DB) login.LoginHandler {

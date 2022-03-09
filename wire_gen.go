@@ -21,6 +21,7 @@ import (
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
 	"app/application/use_case/user/update_user"
+	"app/application/use_case/user/verify_email_user"
 	"app/application/use_case/walet/create_walet"
 	"gorm.io/gorm"
 )
@@ -48,6 +49,13 @@ func DeleteUserHandler(db *gorm.DB) delete_user.DeleteUserHandler {
 	deleteUserService := delete_user.NewDeleteUserService(userRepository)
 	deleteUserHandler := delete_user.NewDeleteUserHandler(deleteUserService)
 	return deleteUserHandler
+}
+
+func VerifyEmailUserHandler(db *gorm.DB) verify_email_user.VerifyEmailUserHandler {
+	userRepository := repository.NewUserRepository(db)
+	verifyEmailUserService := verify_email_user.NewVerifyEmailUserService(userRepository)
+	verifyEmailUserHandler := verify_email_user.NewVerifyEmailUserHandler(verifyEmailUserService)
+	return verifyEmailUserHandler
 }
 
 func LoginHandler(db *gorm.DB) login.LoginHandler {
