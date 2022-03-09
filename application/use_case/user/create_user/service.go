@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	mailgun "github.com/mailgun/mailgun-go/v4"
@@ -45,8 +46,8 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 	}
 
 	// MAIL GUN
-	privateAPIKey := "80538cd1f2abea678622efa2106ad1f5-e2e3d8ec-71564881"
-	var Domain string = "https://api.mailgun.net/v3/sandbox4c2d556b5cc145a192e64fee2cfcd9c7.mailgun.org"
+	privateAPIKey := os.Getenv("MAILGUN_API_KEY")
+	var Domain string = os.Getenv("MAILGUN_DOMAIN")
 
 	mg := mailgun.NewMailgun(Domain, privateAPIKey)
 
