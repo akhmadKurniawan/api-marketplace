@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -42,11 +44,13 @@ func (s *ShowProductByShopIDService) ShowProductByShopID(ctx context.Context, id
 		return nil, err
 	}
 
+	db, _ := strconv.Atoi(os.Getenv("REDIS_DB"))
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
+		Addr:     fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT")),
+		Password: os.Getenv("REDIS_PASS"),
+		DB:       db,
 	})
+	fmt.Println(os.Getenv("REDIS_HOST"))
 
 	value, err := client.Get(ctx, "one").Result()
 	if err == redis.Nil {

@@ -136,3 +136,15 @@ func (repo *UserRepository) DeleteUser(ctx context.Context, id string) error {
 
 	return nil
 }
+
+func (repo *UserRepository) VerifyEmailUser(ctx context.Context, id string, param models.User) error {
+	db := repo.DB
+	user := models.User{}
+
+	errUpdate := db.Model(&user).Where("id = ?", id).Update("status", param.Status).Error
+	if errUpdate != nil {
+		return errUpdate
+	}
+
+	return nil
+}
