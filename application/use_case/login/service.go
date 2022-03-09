@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -44,7 +45,7 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	//create Claims
 	claims := middleware.CreateClaims(uint64(user.ID), user.Username, user.Role, time.Duration(64))
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), claims) // create token
-	signed, err := token.SignedString([]byte("secret"))
+	signed, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
 	if err != nil {
 		log.Println("Service - SignedToken error : ", err)
 		return nil, err
