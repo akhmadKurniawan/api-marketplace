@@ -17,12 +17,12 @@ type Mailgun struct {
 	Recipient string
 }
 
-func SendMailgun(send, sbuj, bdy, recipients string) error {
-	mail := Mailgun{
-		send,
-		sbuj,
-		bdy,
-		recipients,
+func SendMailgun(mail Mailgun) error {
+	mail = Mailgun{
+		mail.Sender,
+		mail.Subject,
+		mail.Body,
+		mail.Recipient,
 	}
 
 	privateAPIKey := os.Getenv("MAILGUN_API_KEY")
@@ -34,8 +34,10 @@ func SendMailgun(send, sbuj, bdy, recipients string) error {
 	body := mail.Body
 	recipient := mail.Recipient
 
-	fmt.Println(recipient)
+	fmt.Println(sender)
+	fmt.Println(subject)
 	fmt.Println(body)
+	fmt.Println(recipient)
 
 	// The message object allows you to add attachments and Bcc recipients
 	message := mg.NewMessage(sender, subject, body, recipient)

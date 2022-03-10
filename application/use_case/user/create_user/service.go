@@ -33,14 +33,12 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		return errHash
 	}
 
-	mail := Mailgun{
+	go shared.SendMailgun(shared.Mailgun{
 		Sender:    "kurniawan@admin.com",
 		Subject:   "app-market",
 		Body:      "Please verify your email",
 		Recipient: req.Email,
-	}
-
-	go shared.SendMailgun(mail.Sender, mail.Subject, mail.Body, mail.Recipient) // akan jalan dibelakang layar jadi error di function ini akan di skip
+	}) // akan jalan dibelakang layar jadi error di function ini akan di skip
 
 	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
 	if errUser != nil {
