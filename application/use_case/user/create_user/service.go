@@ -2,14 +2,15 @@ package create_user
 
 import (
 	"app/application/infrastructure"
+	"app/shared"
 	"context"
 	"errors"
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
-	mailgun "github.com/mailgun/mailgun-go/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -45,45 +46,29 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		return errUser
 	}
 
-	// MAIL GUN
-	privateAPIKey := os.Getenv("MAILGUN_API_KEY")
-	var Domain string = os.Getenv("MAILGUN_DOMAIN")
-
-	mg := mailgun.NewMailgun(Domain, privateAPIKey)
-
-	sender := "sender@example.com"
-	subject := "Fancy subject!"
-	body := "Hello from Mailgun Go!"
-	recipient := req.Email
-
-	fmt.Println(recipient)
-
-	// The message object allows you to add attachments and Bcc recipients
-	message := mg.NewMessage(sender, subject, body, recipient)
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
-	// Send the message with a 10 second timeout
-	resp, id, err := mg.Send(ctx, message)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("ID: %s Resp: %s\n", id, resp)
-	// Mail Gun
-
 	reqUser := RequestMapper(req, string(hashedPassword), "Inactivated")
-	cUser, err := s.userRepository.SignUpUser(ctx, reqUser)
+	userData, err := s.userRepository.SignUpUser(ctx, reqUser)
 	if err != nil {
 		log.Println("Service - CreateUser error : ", err)
 		return err
 	}
 
-	reqSeller, reqCostumer := RequestMappers(req, cUser.ID)
-	if err != nil || cUser.Role < 2 {
-		fmt.Println(cUser.Role)
+	t := time.Now()
+	ti := t.Format("20060102150405")
+	id := strconv.Itoa(int(userData.ID))
+	combineString := ti + ";" + id
+
+	url := os.Getenv("EMAIL_AKTIVASI")
+	message := fmt.Sprintf("Please Verification Your Email\nclick this link for Verification Email: %s/%s", url, combineString)
+	go shared.SendMailgun(shared.Mailgun{
+		Sender:    "kurniawan@admin.com",
+		Subject:   "Verification Email",
+		Body:      message,
+		Recipient: req.Email,
+	}) // akan jalan dibelakang layar jadi error di function ini akan di skip
+
+	reqSeller, reqCostumer := RequestMappers(req, userData.ID)
+	if err != nil || userData.Role < 2 {
 		err = s.costumerRepository.CreateCostumer(ctx, reqCostumer)
 		if err != nil {
 			log.Println("Service - CreateUser error : ", err)
