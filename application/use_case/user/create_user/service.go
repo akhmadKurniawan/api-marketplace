@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -46,7 +47,7 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 	}
 
 	reqUser := RequestMapper(req, string(hashedPassword), "Inactivated")
-	UserId, err := s.userRepository.SignUpUser(ctx, reqUser)
+	userData, err := s.userRepository.SignUpUser(ctx, reqUser)
 	if err != nil {
 		log.Println("Service - CreateUser error : ", err)
 		return err
@@ -54,20 +55,20 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 
 	t := time.Now()
 	ti := t.Format("20060102150405")
-	id := strconv.Itoa(int(UserId.ID))
-	combineString := ti + ":" + id
+	id := strconv.Itoa(int(userData.ID))
+	combineString := ti + ";" + id
 
-	message := fmt.Sprintf("Please verify your email\nclick this link for verify: localhost:5000/api/v1/users/active/%s", combineString)
+	url := os.Getenv("EMAIL_AKTIVASI")
+	message := fmt.Sprintf("Please Verification Your Email\nclick this link for Verification Email: %s/%s", url, combineString)
 	go shared.SendMailgun(shared.Mailgun{
 		Sender:    "kurniawan@admin.com",
-		Subject:   "app-market",
+		Subject:   "Verification Email",
 		Body:      message,
 		Recipient: req.Email,
 	}) // akan jalan dibelakang layar jadi error di function ini akan di skip
 
-	reqSeller, reqCostumer := RequestMappers(req, UserId.ID)
-	if err != nil || UserId.Role < 2 {
-		fmt.Println(UserId.Role)
+	reqSeller, reqCostumer := RequestMappers(req, userData.ID)
+	if err != nil || userData.Role < 2 {
 		err = s.costumerRepository.CreateCostumer(ctx, reqCostumer)
 		if err != nil {
 			log.Println("Service - CreateUser error : ", err)
