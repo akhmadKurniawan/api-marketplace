@@ -1,8 +1,11 @@
 package verify_email_user
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/refactory-id/go-core-package/response"
@@ -21,7 +24,19 @@ func NewVerifyEmailUserHandler(userServ VerifyEmailUserService) VerifyEmailUserH
 func (h *VerifyEmailUserHandler) VerifyEmailUser(c *gin.Context) {
 	req := VerifyEmailUserRequest{}
 	ctx := c.Request.Context()
-	id := c.Param("id")
+	params := c.Param("param")
+	param := strings.Split(params, ";")
+	id := param[1]
+	timeParam := param[0]
+	layoutFormat := "20060102150405"
+	t := time.Now()
+	now := t.Format("20060102150405")
+	date, _ := time.Parse(layoutFormat, timeParam)
+	dateNow, _ := time.Parse(layoutFormat, now)
+	before := dateNow.Before(date)
+	fmt.Println(before)
+	fmt.Println(dateNow)
+	fmt.Println("date", date)
 
 	if err := c.ShouldBind(&req); err != nil {
 		log.Println("Controller - VerifyEmailUser error while binding request : ", err)

@@ -60,7 +60,7 @@ func UserRoutes(route *gin.RouterGroup, db *gorm.DB) {
 		v1.POST("", crHandler.CreateUser)
 		v1.PUT("/:id", upHandler.UpdateUserHandler)
 		v1.DELETE("/:id", dlHandler.DeleteUser)
-		v1.GET("/active/:id", verifyHandler.VerifyEmailUser)
+		v1.GET("/active/:param", verifyHandler.VerifyEmailUser)
 	}
 }
 
