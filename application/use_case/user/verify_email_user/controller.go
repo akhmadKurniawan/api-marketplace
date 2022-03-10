@@ -28,15 +28,28 @@ func (h *VerifyEmailUserHandler) VerifyEmailUser(c *gin.Context) {
 	param := strings.Split(params, ";")
 	id := param[1]
 	timeParam := param[0]
+
 	layoutFormat := "20060102150405"
 	t := time.Now()
-	now := t.Format("20060102150405")
+	now := t.Format(layoutFormat)
+
 	date, _ := time.Parse(layoutFormat, timeParam)
 	dateNow, _ := time.Parse(layoutFormat, now)
-	before := dateNow.Before(date)
-	fmt.Println(before)
-	fmt.Println(dateNow)
-	fmt.Println("date", date)
+
+	createdAt := dateNow.Add(1 * time.Hour)
+	expiresAt := dateNow.Add(2 * time.Hour)
+
+	expired := expiresAt.Sub(createdAt)
+	fmt.Println(expired)
+
+	created := dateNow.Sub(date)
+	fmt.Println(created)
+
+	if created > expired {
+		log.Println("Controller - Error expired")
+		c.JSON(400, false)
+		return
+	}
 
 	if err := c.ShouldBind(&req); err != nil {
 		log.Println("Controller - VerifyEmailUser error while binding request : ", err)
