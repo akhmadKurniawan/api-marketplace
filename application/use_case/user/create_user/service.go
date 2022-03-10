@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -34,8 +33,14 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		return errHash
 	}
 
-	go shared.SendMailgun(req.Email) // akan jalan dibelakang layar jadi error di function ini akan di skip
-	time.Sleep(3 * time.Second)      // menunggu proses goroutine selama 5 detik
+	mail := Mailgun{
+		Sender:    "kurniawan@admin.com",
+		Subject:   "app-market",
+		Body:      "Please verify your email",
+		Recipient: req.Email,
+	}
+
+	go shared.SendMailgun(mail.Sender, mail.Subject, mail.Body, mail.Recipient) // akan jalan dibelakang layar jadi error di function ini akan di skip
 
 	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
 	if errUser != nil {

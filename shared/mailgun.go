@@ -10,18 +10,32 @@ import (
 	"github.com/mailgun/mailgun-go/v4"
 )
 
-func SendMailgun(email string) (err error) {
+type Mailgun struct {
+	Sender    string
+	Subject   string
+	Body      string
+	Recipient string
+}
+
+func SendMailgun(send, sbuj, bdy, recipients string) error {
+	mail := Mailgun{
+		send,
+		sbuj,
+		bdy,
+		recipients,
+	}
+
 	privateAPIKey := os.Getenv("MAILGUN_API_KEY")
 	var Domain string = os.Getenv("MAILGUN_DOMAIN")
-
 	mg := mailgun.NewMailgun(Domain, privateAPIKey)
 
-	sender := "sender@example.com"
-	subject := "Fancy subject!"
-	body := "Hello from Mailgun Go!"
-	recipient := email
+	sender := mail.Sender
+	subject := mail.Subject
+	body := mail.Body
+	recipient := mail.Recipient
 
 	fmt.Println(recipient)
+	fmt.Println(body)
 
 	// The message object allows you to add attachments and Bcc recipients
 	message := mg.NewMessage(sender, subject, body, recipient)

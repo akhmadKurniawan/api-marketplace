@@ -16,6 +16,12 @@ type CreateUserRequest struct {
 	Alamat   string `json:"alamat"`
 	NoHp     string `json:"no_hp"`
 }
+type Mailgun struct {
+	Sender    string
+	Subject   string
+	Body      string
+	Recipient string
+}
 
 func ValidateRequest(req *CreateUserRequest) (bool, error) {
 	validate := validator.New()
