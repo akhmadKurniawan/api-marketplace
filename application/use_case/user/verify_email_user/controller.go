@@ -1,11 +1,10 @@
 package verify_email_user
 
 import (
-	"fmt"
+	"app/shared"
 	"log"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/refactory-id/go-core-package/response"
@@ -29,25 +28,10 @@ func (h *VerifyEmailUserHandler) VerifyEmailUser(c *gin.Context) {
 	id := param[1]
 	timeParam := param[0]
 
-	layoutFormat := "20060102150405"
-	t := time.Now()
-	now := t.Format(layoutFormat)
-
-	date, _ := time.Parse(layoutFormat, timeParam)
-	dateNow, _ := time.Parse(layoutFormat, now)
-
-	createdAt := dateNow.Add(1 * time.Hour)
-	expiresAt := dateNow.Add(2 * time.Hour)
-
-	expired := expiresAt.Sub(createdAt)
-	fmt.Println(expired)
-
-	created := dateNow.Sub(date)
-	fmt.Println(created)
-
-	if created > expired {
+	err := shared.ExpiredVerify(timeParam)
+	if err != nil {
 		log.Println("Controller - Error expired")
-		c.JSON(400, response.SetMessage("your activation is expired", false))
+		c.JSON(400, response.SetMessage(err.Error(), false))
 		return
 	}
 
