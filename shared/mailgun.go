@@ -18,13 +18,6 @@ type Mailgun struct {
 }
 
 func SendMailgun(mail Mailgun) error {
-	mail = Mailgun{
-		mail.Sender,
-		mail.Subject,
-		mail.Body,
-		mail.Recipient,
-	}
-
 	privateAPIKey := os.Getenv("MAILGUN_API_KEY")
 	var Domain string = os.Getenv("MAILGUN_DOMAIN")
 	mg := mailgun.NewMailgun(Domain, privateAPIKey)
@@ -34,11 +27,6 @@ func SendMailgun(mail Mailgun) error {
 	body := mail.Body
 	recipient := mail.Recipient
 
-	fmt.Println(sender)
-	fmt.Println(subject)
-	fmt.Println(body)
-	fmt.Println(recipient)
-
 	// The message object allows you to add attachments and Bcc recipients
 	message := mg.NewMessage(sender, subject, body, recipient)
 
@@ -46,13 +34,13 @@ func SendMailgun(mail Mailgun) error {
 	defer cancel()
 
 	// Send the message with a 10 second timeout
-	resp, id, err := mg.Send(ctx, message)
+	_, id, err := mg.Send(ctx, message)
 
 	if err != nil {
 		log.Println("MAILGUN - error :", err)
 		return err
 	}
 
-	fmt.Printf("ID: %s Resp: %s\n", id, resp)
+	fmt.Printf("ID: %s\n", id)
 	return nil
 }

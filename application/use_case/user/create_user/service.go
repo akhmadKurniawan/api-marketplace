@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strconv"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -33,13 +35,6 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 		return errHash
 	}
 
-	go shared.SendMailgun(shared.Mailgun{
-		Sender:    "kurniawan@admin.com",
-		Subject:   "app-market",
-		Body:      "Please verify your email",
-		Recipient: req.Email,
-	}) // akan jalan dibelakang layar jadi error di function ini akan di skip
-
 	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
 	if errUser != nil {
 		log.Println("Service - CreateUser error : ", errUser)
@@ -51,15 +46,28 @@ func (s *CreateUserService) CreateUser(ctx context.Context, req CreateUserReques
 	}
 
 	reqUser := RequestMapper(req, string(hashedPassword), "Inactivated")
-	cUser, err := s.userRepository.SignUpUser(ctx, reqUser)
+	UserId, err := s.userRepository.SignUpUser(ctx, reqUser)
 	if err != nil {
 		log.Println("Service - CreateUser error : ", err)
 		return err
 	}
 
-	reqSeller, reqCostumer := RequestMappers(req, cUser.ID)
-	if err != nil || cUser.Role < 2 {
-		fmt.Println(cUser.Role)
+	t := time.Now()
+	ti := t.Format("20060102150405")
+	id := strconv.Itoa(int(UserId.ID))
+	combineString := ti + ":" + id
+
+	message := fmt.Sprintf("Please verify your email\nclick this link for verify: localhost:5000/api/v1/users/active/%s", combineString)
+	go shared.SendMailgun(shared.Mailgun{
+		Sender:    "kurniawan@admin.com",
+		Subject:   "app-market",
+		Body:      message,
+		Recipient: req.Email,
+	}) // akan jalan dibelakang layar jadi error di function ini akan di skip
+
+	reqSeller, reqCostumer := RequestMappers(req, UserId.ID)
+	if err != nil || UserId.Role < 2 {
+		fmt.Println(UserId.Role)
 		err = s.costumerRepository.CreateCostumer(ctx, reqCostumer)
 		if err != nil {
 			log.Println("Service - CreateUser error : ", err)
