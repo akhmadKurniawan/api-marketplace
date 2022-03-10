@@ -47,7 +47,7 @@ func (h *VerifyEmailUserHandler) VerifyEmailUser(c *gin.Context) {
 
 	if created > expired {
 		log.Println("Controller - Error expired")
-		c.JSON(400, false)
+		c.JSON(400, response.SetMessage("your activation is expired", false))
 		return
 	}
 
