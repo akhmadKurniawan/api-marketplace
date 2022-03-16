@@ -18,6 +18,18 @@ func NewLoginHandler(loginService LoginService) LoginHandler {
 	}
 }
 
+// @BasePath /api/v1
+
+// PingExample godoc
+// @Summary Login
+// @Schemes
+// @Description Login to api
+// @Tags Login
+// @Accept json
+// @Produce json
+// @Param users body LoginRequest true "Login User"
+// @Success 200 {string} Login
+// @Router /login [post]
 func (h *LoginHandler) Login(c *gin.Context) {
 	req := LoginRequest{}
 	if err := c.Bind(&req); err != nil {

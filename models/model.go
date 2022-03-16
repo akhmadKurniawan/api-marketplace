@@ -7,3 +7,8 @@ type Model struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type BaseResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}

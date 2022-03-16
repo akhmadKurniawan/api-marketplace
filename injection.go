@@ -14,6 +14,7 @@ import (
 	"app/application/use_case/seller/delete_seller"
 	"app/application/use_case/shop/create_shop"
 	"app/application/use_case/transaction/create_transaction"
+	"app/application/use_case/transaction/scheduler_status"
 	"app/application/use_case/transaction/update_transaction"
 	"app/application/use_case/user/create_user"
 	"app/application/use_case/user/delete_user"
@@ -98,4 +99,9 @@ func UpdateTransactionHandler(db *gorm.DB) update_transaction.UpdateTransactionH
 func CreateWaletHandler(db *gorm.DB) create_walet.CreateWaletHandler {
 	wire.Build(create_walet.NewCreateWaletHandler, create_walet.NewCreateWaletService, repository.NewWaletRepository)
 	return create_walet.CreateWaletHandler{}
+}
+
+func UpdateSchedulerHandler(db *gorm.DB) scheduler_status.UpdateSchedulerHandler {
+	wire.Build(scheduler_status.NewUpdateSchedulerHandler, scheduler_status.NewUpdateSchedulerService, repository.NewTransactionRepository)
+	return scheduler_status.UpdateSchedulerHandler{}
 }

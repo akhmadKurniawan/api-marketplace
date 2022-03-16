@@ -31,7 +31,19 @@ func (repo *TransactionRepository) CreateTransaction(ctx context.Context, transa
 
 	tx.Commit()
 	return nil
+}
 
+func (repo *TransactionRepository) UpdateScheduler(ctx context.Context, param models.Transaction) error {
+	db := repo.DB.Debug()
+	transactionData := models.Transaction{}
+
+	errUpdate := db.Raw("UPDATE transactions SET status = ?, updated_at = ? WHERE status = 'pending' AND created_at + interval 1 hour < now()", param.Status, param.UpdatedAt).Scan(transactionData).Error
+	// errUpdate := db.Model(&transactionData).Where("status = pending AND created_at + interval 1 hour < now()").Updates(models.Transaction{Status: param.Status, UpdatedAt: param.UpdatedAt}).Error
+	if errUpdate != nil {
+		return errUpdate
+	}
+
+	return nil
 }
 
 func (repo *TransactionRepository) UpdateTransaction(ctx context.Context, transaction models.Transaction, id string) (models.Transaction, error) {

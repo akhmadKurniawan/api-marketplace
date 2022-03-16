@@ -6,10 +6,14 @@ import (
 	"os"
 
 	database "app/app"
+	docs "app/docs"
 	"app/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron/v3"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"gorm.io/gorm"
 )
 
@@ -22,7 +26,6 @@ func main() {
 	db := database.DBInit()
 
 	ImgRoute(v1, db)
-
 	v1.Use(middleware.AuthenticationRequired())
 
 	UserRoutes(v1, db)
@@ -34,6 +37,7 @@ func main() {
 	ShopRoutes(v1, db)
 	TransactionRoutes(v1, db)
 	WaletRoutes(v1, db)
+	UpdateScheduler(db)
 
 	env := godotenv.Load()
 	if env != nil {
@@ -44,8 +48,9 @@ func main() {
 	if port == "" {
 		log.Fatal(fmt.Sprintf("PORT must be set [%s]", port))
 	}
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	fmt.Println("Success")
 	r.Run(":" + port)
 }
 
@@ -150,4 +155,17 @@ func WaletRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	{
 		v1.POST("", crHandler.CreateWalet)
 	}
+}
+
+func UpdateScheduler(db *gorm.DB) {
+	fmt.Println("in")
+	scheduler := cron.New()
+	defer scheduler.Stop()
+
+	upHandler := UpdateSchedulerHandler(db)
+	sch, err := scheduler.AddFunc("*/1 * * * *", upHandler.UpdateScheduler)
+	fmt.Println("s", sch, err)
+	scheduler.AddFunc("*/1 * * * *", upHandler.UpdateScheduler)
+	go scheduler.Start()
+
 }

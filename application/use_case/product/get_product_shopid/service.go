@@ -44,6 +44,7 @@ func (s *ShowProductByShopIDService) ShowProductByShopID(ctx context.Context, id
 		return nil, err
 	}
 
+	fmt.Println("tes")
 	db, _ := strconv.Atoi(os.Getenv("REDIS_DB"))
 	client := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT")),

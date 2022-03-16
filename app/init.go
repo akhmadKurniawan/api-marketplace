@@ -28,27 +28,19 @@ func DBInit() *gorm.DB {
 	password := os.Getenv("DATABASE_PASSWORD")
 	dbName := os.Getenv("DATABASE_NAME")
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=%s", username, password, host, port, dbName, "Asia%2FJakarta")
-	fmt.Println(host)
-	fmt.Println(port)
-	fmt.Println(username)
-	fmt.Println(password)
-	fmt.Println(dbName)
-	fmt.Println(dsn)
+
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
-	fmt.Println(db)
-	fmt.Println("err", err)
+
 	if err != nil {
 		log.Panic("failed to connect to database")
 	}
 	sqlDB, _ := db.DB()
-	// defer sqlDB.Close()
 	sqlDB.SetConnMaxLifetime(time.Minute * 5)
 	sqlDB.SetMaxIdleConns(0)
 	sqlDB.SetMaxOpenConns(5)
-
-	fmt.Println(dbName)
+	// defer sqlDB.Close()
 
 	dB = db
 	return dB

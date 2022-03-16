@@ -1,0 +1,97 @@
+definitions:
+  get_product_shopid.ShowProductByShopIDResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/get_product_shopid.ShowProductByShopIDResponseData'
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  get_product_shopid.ShowProductByShopIDResponseData:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+      product_type:
+        type: integer
+      qty:
+        type: integer
+      shop_id:
+        type: integer
+    type: object
+  login.LoginRequest:
+    properties:
+      password:
+        type: string
+      token:
+        type: string
+      user_id:
+        type: integer
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+info:
+  contact: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login to api
+      parameters:
+      - description: Login User
+        in: body
+        name: users
+        required: true
+        schema:
+          $ref: '#/definitions/login.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - Login
+  /products/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get show product
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/get_product_shopid.ShowProductByShopIDResponse'
+      summary: ShowProductByShopID
+      tags:
+      - Product
+swagger: "2.0"

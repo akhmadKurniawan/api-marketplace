@@ -2,13 +2,11 @@ package get_product_shopid
 
 import (
 	"app/models"
-
-	base "github.com/refactory-id/go-core-package/response"
 )
 
 type (
 	ShowProductByShopIDResponse struct {
-		base.BaseResponse
+		models.BaseResponse
 		Data []ShowProductByShopIDResponseData `json:"data"`
 	}
 	ShowProductByShopIDResponseData struct {
@@ -28,7 +26,7 @@ type (
 
 func SetResponse(res *Response, message string, success bool) ShowProductByShopIDResponse {
 	return ShowProductByShopIDResponse{
-		BaseResponse: base.BaseResponse{
+		BaseResponse: models.BaseResponse{
 			Message: message,
 			Success: success,
 		},

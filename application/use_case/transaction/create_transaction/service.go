@@ -118,16 +118,17 @@ func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req Cr
 		return "", errUpWalet
 	} // get id seller and update the saldo
 
+	status := "pending"
 	debit := totalAmount - (totalAmount + totalAmount)
 	req.ProductID = product.ID
 	tp := req.TotalProduct - (req.TotalProduct + req.TotalProduct)
-	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, debit, "Debit", "PENDING", resp.ExternalID, tp))
+	errCreate := s.transactionRepository.CreateTransaction(ctx, RequestMapper(req, debit, "Debit", status, resp.ExternalID, tp))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return "", errCreate
 	}
 
-	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapperK(req, totalAmount, "Kredit", "PENDING", resp.ExternalID, seller.UserID))
+	errCreate = s.transactionRepository.CreateTransaction(ctx, RequestMapperK(req, totalAmount, "Kredit", status, resp.ExternalID, seller.UserID))
 	if errCreate != nil {
 		log.Println("Service - CreateTransaction errorCreate : ", errCreate)
 		return "", errCreate

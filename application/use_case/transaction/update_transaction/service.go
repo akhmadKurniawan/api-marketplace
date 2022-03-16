@@ -50,14 +50,15 @@ func (s *UpdateTransactionService) UpdateTransaction(ctx context.Context, req Up
 		return nil, err
 	}
 
-	if data.Status == "" {
-		data.Status = "COMPLETED"
-	}
+	// if data.Status == "" {
+	// 	data.Status = "COMPLETED"
+	// }
 
-	if data.ErrorCode == "INVALID_AMOUNT_ERROR" {
-		data.Status = "FAILED"
-	}
+	// if data.ErrorCode == "INVALID_AMOUNT_ERROR" {
+	// 	data.Status = "FAILED"
+	// }
 
+	data.Status = "success"
 	data.Trans.IdVa = req.IdVa
 	trans, errUpdte := s.transactionRepository.UpdateTransaction(ctx, RequestMapper(req, data.Trans.IdVa, data.Message, data.Status), req.IdVa)
 	if errUpdte != nil {
