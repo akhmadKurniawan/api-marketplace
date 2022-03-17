@@ -165,8 +165,7 @@ func UpdateScheduler(db *gorm.DB) {
 	upHandler := UpdateSchedulerHandler(db)
 	sch, err := scheduler.AddFunc("*/1 * * * *", upHandler.UpdateScheduler)
 	fmt.Println("s", sch, err)
-	scheduler.AddFunc("*/1 * * * *", upHandler.UpdateScheduler)
+	scheduler.AddFunc("*/60 * * * *", upHandler.UpdateScheduler)
 	go scheduler.Start()
 
 }
-"tes" lagicoba again

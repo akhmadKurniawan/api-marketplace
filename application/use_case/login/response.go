@@ -3,13 +3,11 @@ package login
 import (
 	"app/models"
 	"time"
-
-	base "github.com/refactory-id/go-core-package/response"
 )
 
 type (
 	LoginResponse struct {
-		base.BaseResponse
+		models.BaseResponse
 		Data LoginResponseData `json:"data"`
 	}
 
@@ -27,23 +25,23 @@ type (
 	}
 )
 
-func SetResponse(models *Response, message string, success bool) LoginResponse {
+func SetResponse(res *Response, message string, success bool) LoginResponse {
 	return LoginResponse{
-		BaseResponse: base.BaseResponse{
+		BaseResponse: models.BaseResponse{
 			Message: message,
 			Success: success,
 		},
-		Data: ResponseMapper(models),
+		Data: ResponseMapper(res),
 	}
 }
 
-func ResponseMapper(models *Response) LoginResponseData {
+func ResponseMapper(res *Response) LoginResponseData {
 	return LoginResponseData{
-		UserID:    models.User.ID,
-		Token:     models.User.UserToken.Token,
-		Username:  models.User.Username,
-		Role:      models.User.Role,
-		CreatedAt: models.User.CreatedAt,
-		UpdatedAt: models.User.UpdatedAt,
+		UserID:    res.User.ID,
+		Token:     res.User.UserToken.Token,
+		Username:  res.User.Username,
+		Role:      res.User.Role,
+		CreatedAt: res.User.CreatedAt,
+		UpdatedAt: res.User.UpdatedAt,
 	}
 }

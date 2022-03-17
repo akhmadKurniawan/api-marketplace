@@ -29,19 +29,39 @@ definitions:
       shop_id:
         type: integer
     type: object
-  login.LoginRequest:
+  login.LoginRequestBody:
     properties:
       password:
         type: string
-      token:
-        type: string
-      user_id:
-        type: integer
       username:
         type: string
     required:
     - password
     - username
+    type: object
+  login.LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/login.LoginResponseData'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  login.LoginResponseData:
+    properties:
+      created_at:
+        type: string
+      role:
+        type: integer
+      token:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+      username:
+        type: string
     type: object
 info:
   contact: {}
@@ -50,24 +70,24 @@ paths:
     post:
       consumes:
       - application/json
-      description: Login to api
+      description: for login to app
       parameters:
       - description: Login User
         in: body
-        name: users
+        name: request
         required: true
         schema:
-          $ref: '#/definitions/login.LoginRequest'
+          $ref: '#/definitions/login.LoginRequestBody'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: string
-      summary: Login
+            $ref: '#/definitions/login.LoginResponse'
+      summary: Login To App
       tags:
-      - Login
+      - Login user
   /products/{id}:
     get:
       consumes:

@@ -30,7 +30,7 @@ func NewShowProductByShopIDHandler(productByShopIDServ ShowProductByShopIDServic
 // @Produce json
 // @Param Authorization header string true "Bearer token"
 // @Param id path int true "id"
-// @Success 200 {object} ShowProductByShopIDResponse{models.BaseResponse}
+// @Success 200 {object} ShowProductByShopIDResponse
 // @Router /products/{id} [get]
 func (h *ShowProductByShopIDHandler) ShowProductByShopID(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))

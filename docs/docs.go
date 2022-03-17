@@ -18,7 +18,7 @@ const docTemplate = `{
     "paths": {
         "/login": {
             "post": {
-                "description": "Login to api",
+                "description": "for login to app",
                 "consumes": [
                     "application/json"
                 ],
@@ -26,17 +26,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Login"
+                    "Login user"
                 ],
-                "summary": "Login",
+                "summary": "Login To App",
                 "parameters": [
                     {
                         "description": "Login User",
-                        "name": "users",
+                        "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/login.LoginRequest"
+                            "$ref": "#/definitions/login.LoginRequestBody"
                         }
                     }
                 ],
@@ -44,7 +44,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/login.LoginResponse"
                         }
                     }
                 }
@@ -137,7 +137,7 @@ const docTemplate = `{
                 }
             }
         },
-        "login.LoginRequest": {
+        "login.LoginRequestBody": {
             "type": "object",
             "required": [
                 "password",
@@ -147,7 +147,38 @@ const docTemplate = `{
                 "password": {
                     "type": "string"
                 },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "login.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/login.LoginResponseData"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "login.LoginResponseData": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "integer"
+                },
                 "token": {
+                    "type": "string"
+                },
+                "updated_at": {
                     "type": "string"
                 },
                 "user_id": {

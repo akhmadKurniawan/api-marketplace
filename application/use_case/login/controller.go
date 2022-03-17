@@ -20,15 +20,17 @@ func NewLoginHandler(loginService LoginService) LoginHandler {
 
 // @BasePath /api/v1
 
-// PingExample godoc
-// @Summary Login
-// @Schemes
-// @Description Login to api
-// @Tags Login
+// Login is endpoint for login to app
+// @Summary Login To App
+// @Description for login to app
+// @Tags Login user
 // @Accept json
+// @Param request body LoginRequestBody{} true "Login User"
 // @Produce json
-// @Param users body LoginRequest true "Login User"
-// @Success 200 {string} Login
+// // @Failure 400 {object} models.BaseResponse
+// //@Failure 404 {object} LoginResponse
+// //@Failure 500 {object} LoginResponse
+// @Success 200 {object} LoginResponse
 // @Router /login [post]
 func (h *LoginHandler) Login(c *gin.Context) {
 	req := LoginRequest{}
@@ -48,6 +50,7 @@ func (h *LoginHandler) Login(c *gin.Context) {
 	if err != nil {
 		log.Println("Controller - Login error while accessing service :", err)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(err.Error(), false))
+		return
 	}
 
 	c.JSON(http.StatusOK, SetResponse(res, "Success", true))

@@ -13,6 +13,11 @@ type (
 		UserID   int    `json:"user_id"`
 		Token    string `json:"token"`
 	}
+
+	LoginRequestBody struct {
+		Username string `json:"username" validate:"required"`
+		Password string `json:"password" validate:"required"`
+	}
 )
 
 func ValidateRequest(req *LoginRequest) (bool, error) {
