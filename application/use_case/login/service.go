@@ -4,11 +4,11 @@ import (
 	"app/application/infrastructure"
 	"app/middleware"
 	"context"
-	"errors"
-	"log"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
@@ -30,7 +30,7 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	// get username
 	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
 	if errUser != nil {
-		log.Println("Service - Login error while access username : ", errUser)
+		log.Error().Err(errUser).Msg("Service - Login error while access username")
 		return nil, errUser
 	}
 	byteDBPass := []byte(user.Password)
@@ -38,7 +38,7 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 
 	//compare hash password
 	if error := bcrypt.CompareHashAndPassword(byteDBPass, byteReqPass); error != nil {
-		log.Println("Service - Compare hash error : ", error)
+		log.Error().Err(errUser).Msg("Service - Compare hash error")
 		return nil, error
 	}
 
@@ -47,12 +47,12 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), claims) // create token
 	signed, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
 	if err != nil {
-		log.Println("Service - SignedToken error : ", err)
+		log.Error().Err(err).Msg("Service - Signed Token error")
 		return nil, err
 	}
 	_, errLogin := s.loginRepository.Login(ctx, RequestMapper(user.ID, signed), user.ID)
 	if errLogin != nil {
-		log.Println("Service - LoginUser error : ", errLogin)
+		log.Error().Err(errLogin).Msg("Service - Login error")
 		return nil, errLogin
 	}
 
@@ -61,12 +61,13 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	//Get user By Id
 	userData, errGetUser := s.userRepository.GetUserID(ctx, userId)
 	if errGetUser != nil {
-		log.Println("Service - GetUserId error : ", err)
+		log.Error().Err(errGetUser).Msg("Service - GetUserID error")
 		return nil, errGetUser
 	}
 	if errGetUser != nil || userData.Status == "Inactivated" {
-		errGetUser = errors.New("please activate your account")
-		return nil, errGetUser
+		// errGetUser = errors.New("please activate your account")
+		log.Error().Err(errUser).Msg("please activate your account")
+		return nil, errUser
 	}
 
 	return &Response{User: userData}, nil

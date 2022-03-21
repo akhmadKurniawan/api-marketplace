@@ -24,22 +24,21 @@ func (h *UpdateUserHandler) UpdateUserHandler(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := c.ShouldBind(&req); err != nil {
-		log.Fatal("Controller - Update error while binding request to json :", err)
+		log.Println("Controller - Update error while binding request to json :", err)
 		c.JSON(500, response.SetMessage(err.Error(), false))
 		return
 	}
 
 	fmt.Println(req)
-
 	if ok, err := ValidateRequest(&req); !ok {
-		log.Fatal("Controller - Update validation :", err)
+		log.Println("Controller - Update validation :", err)
 		c.JSON(http.StatusUnprocessableEntity, response.SetMessage(err.Error(), false))
 		return
 	}
 
 	res, err := h.userService.UpdateUser(c.Request.Context(), req, id)
 	if err != nil {
-		log.Fatal("Controller - Update error while accessing service :", err)
+		log.Println("Controller - Update error while accessing service :", err)
 		c.JSON(http.StatusInternalServerError, response.SetMessage(err.Error(), false))
 	}
 

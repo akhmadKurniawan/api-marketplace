@@ -8,6 +8,7 @@ import (
 	database "app/app"
 	docs "app/docs"
 	"app/middleware"
+	"app/shared"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -24,6 +25,8 @@ func main() {
 
 	v1 := r.Group("/api/v1")
 	db := database.DBInit()
+
+	shared.InitLogger()
 
 	ImgRoute(v1, db)
 	v1.Use(middleware.AuthenticationRequired())
@@ -163,8 +166,8 @@ func UpdateScheduler(db *gorm.DB) {
 	defer scheduler.Stop()
 
 	upHandler := UpdateSchedulerHandler(db)
-	sch, err := scheduler.AddFunc("*/1 * * * *", upHandler.UpdateScheduler)
-	fmt.Println("s", sch, err)
+	// sch, err := scheduler.AddFunc("*/1 * * * *", upHandler.UpdateScheduler)
+	// fmt.Println("s", sch, err)
 	scheduler.AddFunc("*/60 * * * *", upHandler.UpdateScheduler)
 	go scheduler.Start()
 

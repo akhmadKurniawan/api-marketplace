@@ -98,11 +98,11 @@ func (repo *UserRepository) GetAllUsername(ctx context.Context, username string)
 }
 
 func (repo *UserRepository) UpdateUser(ctx context.Context, user models.User, id string) (models.User, error) {
-	errUpdate := repo.DB.Model(&user).Where("id = ?", id).Updates(&user).Error
+	userData := models.User{}
+	errUpdate := repo.DB.Model(&userData).Where("id = ?", id).Updates(&user).Error
 	if errUpdate != nil {
 		return user, errUpdate
 	}
-
 	return user, nil
 }
 
