@@ -97,6 +97,20 @@ func (repo *UserRepository) GetAllUsername(ctx context.Context, username string)
 	return userData, nil
 }
 
+func (repo *UserRepository) GetUserTransaction(ctx context.Context, param models.User) (*models.User, error) {
+	db := repo.DB
+	userData := models.User{}
+
+	errGet := db.First(&userData, "id = ?", param.ID).Error
+	if errGet != nil {
+		if !errors.Is(errGet, gorm.ErrRecordNotFound) {
+			log.Println("UserRepository - GetUser Error :", errGet)
+		}
+		return nil, errGet
+	}
+	return &userData, nil
+}
+
 func (repo *UserRepository) UpdateUser(ctx context.Context, user models.User, id string) (models.User, error) {
 	userData := models.User{}
 	errUpdate := repo.DB.Model(&userData).Where("id = ?", id).Updates(&user).Error

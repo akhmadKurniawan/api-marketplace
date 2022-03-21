@@ -33,6 +33,18 @@ func (repo *TransactionRepository) CreateTransaction(ctx context.Context, transa
 	return nil
 }
 
+func (repo *TransactionRepository) GetTransactions(ctx context.Context) ([]models.Transaction, error) {
+	db := repo.DB
+	product := []models.Transaction{}
+
+	errGet := db.Find(&product).Error
+	if errGet != nil {
+		return nil, errGet
+	}
+
+	return product, nil
+}
+
 func (repo *TransactionRepository) UpdateScheduler(ctx context.Context, param models.Transaction) error {
 	db := repo.DB.Debug()
 	transactionData := models.Transaction{}

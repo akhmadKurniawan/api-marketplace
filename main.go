@@ -143,9 +143,11 @@ func ShopRoutes(route *gin.RouterGroup, db *gorm.DB) {
 func TransactionRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	crHandler := CreateTransactionHandler(db)
 	upHandler := UpdateTransactionHandler(db)
+	getHandler := ShowTransactionHandler(db)
 
 	v1 := route.Group("/transactions")
 	{
+		v1.GET("", getHandler.ShowTransaction)
 		v1.POST("", crHandler.CreateTransaction)
 		v1.POST("/:id", upHandler.UpdateTransaction)
 	}

@@ -8,6 +8,7 @@ import (
 type UserRepository interface {
 	DeleteUser(context.Context, string) error
 	SignUpUser(context.Context, models.User) (models.User, error)
+	GetUserTransaction(context.Context, models.User) (*models.User, error)
 	GetUsername(context.Context, string) (models.User, error)
 	GetAllUsername(context.Context, string) (models.User, error)
 	GetUserID(ctx context.Context, id string) (models.User, error)
