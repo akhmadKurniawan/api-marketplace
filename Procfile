@@ -1,0 +1,1 @@
+web: /bin/sh -c ./api-marketing

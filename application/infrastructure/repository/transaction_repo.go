@@ -4,6 +4,7 @@ import (
 	"app/application/infrastructure"
 	"app/models"
 	"context"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -31,6 +32,22 @@ func (repo *TransactionRepository) CreateTransaction(ctx context.Context, transa
 
 	tx.Commit()
 	return nil
+}
+
+//not implement
+func (repo *TransactionRepository) GetDetailTransaction(ctx context.Context, id int) (*models.Transaction, error) {
+	db := repo.DB
+	transaction := models.Transaction{}
+
+	errGet := db.First(&transaction).Error
+	if errGet != nil {
+		if errors.Is(errGet, gorm.ErrRecordNotFound) {
+			return nil, errGet
+		}
+		return nil, errGet
+	}
+
+	return &transaction, nil
 }
 
 func (repo *TransactionRepository) GetTransactions(ctx context.Context) ([]models.Transaction, error) {

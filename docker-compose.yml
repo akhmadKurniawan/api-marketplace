@@ -31,8 +31,9 @@ services:
     image: redis:6-alpine
     ports:
       - 6379:6379
-    environment:
-      - REDIS_HOST=redis//
-      - REDIS_PORT=6379
-      - REDIS_DB=1
-      - REDIS_PASS=
+    restart: always
+    # environment:
+    #   - REDIS_HOST=app-mysql
+    #   - REDIS_PORT=6379
+    #   - REDIS_DB=1
+    #   - REDIS_PASS=

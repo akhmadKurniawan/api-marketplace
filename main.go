@@ -21,6 +21,7 @@ import (
 func main() {
 	fmt.Println("Hello World")
 
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	v1 := r.Group("/api/v1")

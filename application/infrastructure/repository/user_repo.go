@@ -97,6 +97,7 @@ func (repo *UserRepository) GetAllUsername(ctx context.Context, username string)
 	return userData, nil
 }
 
+//not implement
 func (repo *UserRepository) GetUserTransaction(ctx context.Context, param models.User) (*models.User, error) {
 	db := repo.DB
 	userData := models.User{}
