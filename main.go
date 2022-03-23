@@ -21,11 +21,11 @@ import (
 func main() {
 	fmt.Println("Hello World")
 
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	v1 := r.Group("/api/v1")
-	db := database.DBInit()
+	db := database.DBInitP()
 
 	shared.InitLogger()
 
@@ -48,6 +48,7 @@ func main() {
 		fmt.Println(env)
 	}
 	port := os.Getenv("APP_PORT")
+	fmt.Println(port)
 
 	if port == "" {
 		log.Fatal(fmt.Sprintf("PORT must be set [%s]", port))
@@ -164,7 +165,6 @@ func WaletRoutes(route *gin.RouterGroup, db *gorm.DB) {
 }
 
 func UpdateScheduler(db *gorm.DB) {
-	fmt.Println("in")
 	scheduler := cron.New()
 	defer scheduler.Stop()
 

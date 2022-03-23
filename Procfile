@@ -1,1 +1,1 @@
-web: /bin/sh -c ./api-marketing
+web: /bin/sh -c ./api-market

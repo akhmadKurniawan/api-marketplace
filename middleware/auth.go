@@ -77,7 +77,7 @@ func AuthenticationRequired() gin.HandlerFunc {
 		}
 
 		// Check token
-		if err = app.GetDB().Table("user_tokens").Select("token").Where(&models.UserToken{Token: tokenPart}).First(&accToken).Error; err != nil {
+		if err = app.GetDBP().Table("user_tokens").Select("token").Where(&models.UserToken{Token: tokenPart}).First(&accToken).Error; err != nil {
 			c.JSON(403, response.SetMessage("Session login Anda berubah. Silakan lakukan login ulang", false))
 			c.Abort()
 			return

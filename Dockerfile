@@ -1,11 +1,11 @@
 FROM golang:1.16-alpine
 
-WORKDIR /app
+WORKDIR /app-market
 
 COPY . .
 
-RUN go build -o api-marketing
+RUN go build -o api-market
 
-EXPOSE 8080
+EXPOSE 8000
 
-CMD ./api-marketing
+CMD ./api-market
