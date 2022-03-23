@@ -21,11 +21,11 @@ import (
 func main() {
 	fmt.Println("Hello World")
 
-	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	v1 := r.Group("/api/v1")
-	db := database.DBInitP()
+	db := database.DBInit()
 
 	shared.InitLogger()
 
@@ -47,7 +47,7 @@ func main() {
 	if env != nil {
 		fmt.Println(env)
 	}
-	port := os.Getenv("APP_PORT")
+	port := os.Getenv("PORT")
 	fmt.Println(port)
 
 	if port == "" {

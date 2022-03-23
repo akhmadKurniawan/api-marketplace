@@ -6,6 +6,6 @@ COPY . .
 
 RUN go build -o api-market
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ./api-market

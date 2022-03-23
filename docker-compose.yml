@@ -1,40 +1,36 @@
 version: '3'
 services:
-  app-postgres:
-    image: postgres:14-alpine
+  app-mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     ports:
-      - 5432:5432
+      - 3306:3306
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=app
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=app
     volumes:
-      - ./dbbackup/postgres.sql:/docker-entrypoint-initdb.d/postgres.sql
-  app-backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 8000:8000
-    environment:
-      - DATABASE_URL=app-postgres
-      # - POSTGRES_HOST=app-postgres
-      # - POSTGRES_PORT=5432
-      # - POSTGRES_USER_DB=root
-      # - POSTGRES_PASSWORD=secret
-      # - POSTGRES_NAME_DB=app
-      # - GIN_MODE=release
-    restart: always
-    depends_on:
-      - app-postgres
+      - ./dbbackup/init.sql:/docker-entrypoint-initdb.d/init.sql
   app-redis:
     image: redis:6-alpine
     ports:
       - 6379:6379
     restart: always
-    # environment:
-    #   - REDIS_HOST=app-mysql
-    #   - REDIS_PORT=6379
-    #   - REDIS_DB=1
-    #   - REDIS_PASS=
+  app-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_HOST=app-mysql
+      - REDIS_HOST=app-redis
+      - DATABASE_PORT=3306
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=secret
+      - DATABASE_NAME=app
+      - GIN_MODE=release
+    restart: always
+    depends_on:
+      - app-mysql
+      - app-redis
