@@ -5,21 +5,30 @@ import (
 	"app/models"
 	"context"
 
+	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/gorm"
 )
 
 type ProductTypeRepository struct {
-	DB *gorm.DB
+	DB         *gorm.DB
+	Collection *mongo.Collection
 }
 
-func NewProductTypeRepository(db *gorm.DB) infrastructure.ProductTypeRepository {
+func NewProductTypeRepository(db *gorm.DB, database *mongo.Database) infrastructure.ProductTypeRepository {
 	return &ProductTypeRepository{
-		DB: db,
+		DB:         db,
+		Collection: database.Collection("product_types"),
 	}
 }
 
 func (repo *ProductTypeRepository) CreateProductType(ctx context.Context, productType models.ProductType) error {
 	db := repo.DB
+	dbm := repo.Collection
+
+	_, err := dbm.InsertOne(ctx, productType)
+	if err != nil {
+		return err
+	}
 
 	errCreate := db.Create(&productType).Error
 	if errCreate != nil {

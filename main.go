@@ -27,6 +27,9 @@ func main() {
 	v1 := r.Group("/api/v1")
 	db := database.DBInit()
 
+	dbM := database.MongoDBInit()
+	fmt.Println(dbM)
+
 	shared.InitLogger()
 
 	ImgRoute(v1, db)
