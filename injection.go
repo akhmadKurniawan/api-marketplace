@@ -73,7 +73,7 @@ func CreateProductHandler(db *gorm.DB, mongo *mongo.Database) create_product.Cre
 	return create_product.CreateProductHandler{}
 }
 
-func ShowProductByShopIDHandler(db *gorm.DB) get_product_shopid.ShowProductByShopIDHandler {
+func ShowProductByShopIDHandler(db *gorm.DB, mongo *mongo.Database) get_product_shopid.ShowProductByShopIDHandler {
 	wire.Build(get_product_shopid.NewShowProductByShopIDHandler, get_product_shopid.NewShowProductByShopIDService, repository.NewProductRepository)
 	return get_product_shopid.ShowProductByShopIDHandler{}
 }
@@ -88,7 +88,7 @@ func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
 	return create_shop.CreateShopHandler{}
 }
 
-func CreateTransactionHandler(db *gorm.DB) create_transaction.CreateTransactionHandler {
+func CreateTransactionHandler(db *gorm.DB, mongo *mongo.Database) create_transaction.CreateTransactionHandler {
 	wire.Build(create_transaction.NewCreateTransactionHandler, create_transaction.NewCreateTransactionService, repository.NewTransactionRepository, repository.NewProductRepository, repository.NewWaletRepository, repository.NewSellerRepository, repository.NewShopRepository)
 	return create_transaction.CreateTransactionHandler{}
 }

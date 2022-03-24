@@ -91,7 +91,7 @@ func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
 }
 
 func CreateProductHandler(db *gorm.DB, mongo2 *mongo.Database) create_product.CreateProductHandler {
-	productRepository := repository.NewProductRepository(db)
+	productRepository := repository.NewProductRepository(db, mongo2)
 	shopRepository := repository.NewShopRepository(db)
 	productTypeRepository := repository.NewProductTypeRepository(db, mongo2)
 	createProductService := create_product.NewCreateProductService(productRepository, shopRepository, productTypeRepository)
@@ -99,8 +99,8 @@ func CreateProductHandler(db *gorm.DB, mongo2 *mongo.Database) create_product.Cr
 	return createProductHandler
 }
 
-func ShowProductByShopIDHandler(db *gorm.DB) get_product_shopid.ShowProductByShopIDHandler {
-	productRepository := repository.NewProductRepository(db)
+func ShowProductByShopIDHandler(db *gorm.DB, mongo2 *mongo.Database) get_product_shopid.ShowProductByShopIDHandler {
+	productRepository := repository.NewProductRepository(db, mongo2)
 	showProductByShopIDService := get_product_shopid.NewShowProductByShopIDService(productRepository)
 	showProductByShopIDHandler := get_product_shopid.NewShowProductByShopIDHandler(showProductByShopIDService)
 	return showProductByShopIDHandler
@@ -121,9 +121,9 @@ func CreateShopHandler(db *gorm.DB) create_shop.CreateShopHandler {
 	return createShopHandler
 }
 
-func CreateTransactionHandler(db *gorm.DB) create_transaction.CreateTransactionHandler {
+func CreateTransactionHandler(db *gorm.DB, mongo2 *mongo.Database) create_transaction.CreateTransactionHandler {
 	transactionRepository := repository.NewTransactionRepository(db)
-	productRepository := repository.NewProductRepository(db)
+	productRepository := repository.NewProductRepository(db, mongo2)
 	waletRepository := repository.NewWaletRepository(db)
 	sellerRepository := repository.NewSellerRepository(db)
 	shopRepository := repository.NewShopRepository(db)

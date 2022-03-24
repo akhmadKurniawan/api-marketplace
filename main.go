@@ -43,7 +43,7 @@ func main() {
 	ProductTypeRoutes(v1, db, dbM)
 	ProductRoutes(v1, db, dbM)
 	ShopRoutes(v1, db)
-	TransactionRoutes(v1, db)
+	TransactionRoutes(v1, db, dbM)
 	WaletRoutes(v1, db)
 	UpdateScheduler(db)
 
@@ -109,7 +109,7 @@ func LoginRoutes(route *gin.RouterGroup, db *gorm.DB) {
 
 func ProductRoutes(route *gin.RouterGroup, db *gorm.DB, mdb *mongo.Database) {
 	crHandler := CreateProductHandler(db, mdb)
-	getShopIdHandler := ShowProductByShopIDHandler(db)
+	getShopIdHandler := ShowProductByShopIDHandler(db, mdb)
 	v1 := route.Group("/products")
 	{
 		v1.POST("", crHandler.CreateProduct)
@@ -146,8 +146,8 @@ func ShopRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	}
 }
 
-func TransactionRoutes(route *gin.RouterGroup, db *gorm.DB) {
-	crHandler := CreateTransactionHandler(db)
+func TransactionRoutes(route *gin.RouterGroup, db *gorm.DB, mdb *mongo.Database) {
+	crHandler := CreateTransactionHandler(db, mdb)
 	upHandler := UpdateTransactionHandler(db)
 	getHandler := ShowTransactionHandler(db)
 
@@ -175,7 +175,7 @@ func UpdateScheduler(db *gorm.DB) {
 	upHandler := UpdateSchedulerHandler(db)
 	// sch, err := scheduler.AddFunc("*/1 * * * *", upHandler.UpdateScheduler)
 	// fmt.Println("s", sch, err)
-	scheduler.AddFunc("*/60 * * * *", upHandler.UpdateScheduler)
+	scheduler.AddFunc("*60 * * * *", upHandler.UpdateScheduler)
 	go scheduler.Start()
 
 }

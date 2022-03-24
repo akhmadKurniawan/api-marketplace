@@ -4,22 +4,34 @@ import (
 	"app/application/infrastructure"
 	"app/models"
 	"context"
+	"log"
 
+	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/gorm"
 )
 
 type ProductRepository struct {
-	DB *gorm.DB
+	DB         *gorm.DB
+	Collection *mongo.Collection
 }
 
-func NewProductRepository(db *gorm.DB) infrastructure.ProductRepository {
+func NewProductRepository(db *gorm.DB, dmb *mongo.Database) infrastructure.ProductRepository {
 	return &ProductRepository{
-		DB: db,
+		DB:         db,
+		Collection: dmb.Collection("products"),
 	}
 }
 
 func (repo *ProductRepository) CreateProduct(ctx context.Context, product models.Product) error {
 	db := repo.DB
+	dbm := repo.Collection
+
+	go func() {
+		_, err := dbm.InsertOne(ctx, product)
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 
 	errCreate := db.Create(&product).Error
 	if errCreate != nil {
@@ -86,7 +98,6 @@ func (repo *ProductRepository) GetProduct(ctx context.Context, params models.Pro
 		db = db.Where("price = ?", params.Price)
 	}
 
-	db.Debug().Find(&product)
 	errGet := db.Find(&product).Error
 	if errGet != nil {
 		return product, errGet
