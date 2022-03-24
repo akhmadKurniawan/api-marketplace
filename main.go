@@ -15,6 +15,7 @@ import (
 	"github.com/robfig/cron/v3"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/gorm"
 )
 
@@ -39,8 +40,8 @@ func main() {
 	LoginRoutes(v1, db)
 	SellerRoutes(v1, db)
 	CostumerRoutes(v1, db)
-	ProductTypeRoutes(v1, db)
-	ProductRoutes(v1, db)
+	ProductTypeRoutes(v1, db, dbM)
+	ProductRoutes(v1, db, dbM)
 	ShopRoutes(v1, db)
 	TransactionRoutes(v1, db)
 	WaletRoutes(v1, db)
@@ -106,8 +107,8 @@ func LoginRoutes(route *gin.RouterGroup, db *gorm.DB) {
 	}
 }
 
-func ProductRoutes(route *gin.RouterGroup, db *gorm.DB) {
-	crHandler := CreateProductHandler(db)
+func ProductRoutes(route *gin.RouterGroup, db *gorm.DB, mdb *mongo.Database) {
+	crHandler := CreateProductHandler(db, mdb)
 	getShopIdHandler := ShowProductByShopIDHandler(db)
 	v1 := route.Group("/products")
 	{
@@ -127,8 +128,8 @@ func ImgRoute(route *gin.RouterGroup, db *gorm.DB) {
 	})
 }
 
-func ProductTypeRoutes(route *gin.RouterGroup, db *gorm.DB) {
-	crHandler := CreateProductTypeHandler(db)
+func ProductTypeRoutes(route *gin.RouterGroup, db *gorm.DB, mdb *mongo.Database) {
+	crHandler := CreateProductTypeHandler(db, mdb)
 
 	v1 := route.Group("/product_types")
 	{

@@ -24,6 +24,7 @@ import (
 	"app/application/use_case/walet/create_walet"
 
 	"github.com/google/wire"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/gorm"
 )
 
@@ -67,7 +68,7 @@ func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
 	return create_costumer.CreateCostumerHandler{}
 }
 
-func CreateProductHandler(db *gorm.DB) create_product.CreateProductHandler {
+func CreateProductHandler(db *gorm.DB, mongo *mongo.Database) create_product.CreateProductHandler {
 	wire.Build(create_product.NewCreateProductHandler, create_product.NewCreateProductService, repository.NewProductRepository, repository.NewShopRepository, repository.NewProductTypeRepository)
 	return create_product.CreateProductHandler{}
 }
@@ -77,7 +78,7 @@ func ShowProductByShopIDHandler(db *gorm.DB) get_product_shopid.ShowProductBySho
 	return get_product_shopid.ShowProductByShopIDHandler{}
 }
 
-func CreateProductTypeHandler(db *gorm.DB) create_product_type.CreateProductTypeHandler {
+func CreateProductTypeHandler(db *gorm.DB, mongo *mongo.Database) create_product_type.CreateProductTypeHandler {
 	wire.Build(create_product_type.NewCreateProductTypeHandler, create_product_type.NewCreateProductTypeService, repository.NewProductTypeRepository)
 	return create_product_type.CreateProductTypeHandler{}
 }

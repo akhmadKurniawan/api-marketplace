@@ -62,5 +62,4 @@ func (h *CreateProductTypeHandler) CreateProductType(c *gin.Context) {
 
 		c.JSON(http.StatusCreated, response.SetMessage("success", true))
 	}
-
 }

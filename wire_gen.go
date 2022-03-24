@@ -25,6 +25,7 @@ import (
 	"app/application/use_case/user/update_user"
 	"app/application/use_case/user/verify_email_user"
 	"app/application/use_case/walet/create_walet"
+	"go.mongodb.org/mongo-driver/mongo"
 	"gorm.io/gorm"
 )
 
@@ -89,10 +90,10 @@ func CreateCostumerHandler(db *gorm.DB) create_costumer.CreateCostumerHandler {
 	return createCostumerHandler
 }
 
-func CreateProductHandler(db *gorm.DB) create_product.CreateProductHandler {
+func CreateProductHandler(db *gorm.DB, mongo2 *mongo.Database) create_product.CreateProductHandler {
 	productRepository := repository.NewProductRepository(db)
 	shopRepository := repository.NewShopRepository(db)
-	productTypeRepository := repository.NewProductTypeRepository(db)
+	productTypeRepository := repository.NewProductTypeRepository(db, mongo2)
 	createProductService := create_product.NewCreateProductService(productRepository, shopRepository, productTypeRepository)
 	createProductHandler := create_product.NewCreateProductHandler(createProductService)
 	return createProductHandler
@@ -105,8 +106,8 @@ func ShowProductByShopIDHandler(db *gorm.DB) get_product_shopid.ShowProductBySho
 	return showProductByShopIDHandler
 }
 
-func CreateProductTypeHandler(db *gorm.DB) create_product_type.CreateProductTypeHandler {
-	productTypeRepository := repository.NewProductTypeRepository(db)
+func CreateProductTypeHandler(db *gorm.DB, mongo2 *mongo.Database) create_product_type.CreateProductTypeHandler {
+	productTypeRepository := repository.NewProductTypeRepository(db, mongo2)
 	createProductTypeService := create_product_type.NewCreateProductTypeService(productTypeRepository)
 	createProductTypeHandler := create_product_type.NewCreateProductTypeHandler(createProductTypeService)
 	return createProductTypeHandler

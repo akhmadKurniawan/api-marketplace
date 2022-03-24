@@ -7,7 +7,7 @@ import (
 )
 
 type CreateProductTypeRequest struct {
-	Name string `json:"name" form:"name"`
+	Name string `bson:"name" json:"name" form:"name"`
 }
 
 func ValidateRequest(req *CreateProductTypeRequest) (bool, error) {
