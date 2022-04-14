@@ -39,10 +39,10 @@ func SetResponse(domain *Response, message string, success bool) UpdateUserRespo
 
 func ResponseMapper(domain *Response) UpdateUserResponseData {
 	return UpdateUserResponseData{
-		ID:        domain.User.Model.ID,
+		ID:        domain.User.ID,
 		Username:  domain.User.Username,
 		Role:      domain.User.Role,
-		CreatedAt: domain.User.Model.CreatedAt,
-		UpdatedAt: domain.User.Model.UpdatedAt,
+		CreatedAt: domain.User.CreatedAt,
+		UpdatedAt: domain.User.UpdatedAt,
 	}
 }

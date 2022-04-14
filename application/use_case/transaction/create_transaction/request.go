@@ -7,6 +7,7 @@ import (
 )
 
 type CreateTransactionRequest struct {
+	ID           int    `json:"id"`
 	UserID       int    `json:"user_id"`
 	ProductID    int    `json:"product_id"`
 	Type         string `json:"type"`
@@ -14,7 +15,7 @@ type CreateTransactionRequest struct {
 	Status       string `json:"status"`
 	Amount       int    `json:"amount"`
 	TotalProduct int    `json:"total_product"`
-	IdVa         string `json:"id_va"`
+	// IdVa         string `json:"id_va"`
 }
 
 func ValidateRequest(req *CreateTransactionRequest) (bool, error) {

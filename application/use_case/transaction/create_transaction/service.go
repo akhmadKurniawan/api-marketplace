@@ -3,12 +3,14 @@ package create_transaction
 import (
 	"app/application/infrastructure"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"os"
 	"time"
 
+	"github.com/streadway/amqp"
 	"github.com/xendit/xendit-go"
 	"github.com/xendit/xendit-go/virtualaccount"
 )
@@ -29,6 +31,58 @@ func NewCreateTransactionService(transactionRepo infrastructure.TransactionRepos
 		sellerRepository:      sellerRepo,
 		shopRepository:        shopRepo,
 	}
+}
+
+func (s *CreateTransactionService) CreateRabbitMQ(ctx context.Context, req CreateTransactionRequest) error {
+
+	mars, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Go rabbit mq")
+	conn, err := amqp.Dial("amqp://root:secret@localhost:5672/")
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+	fmt.Println("Successfully connected to rabbitmq")
+	ch, err := conn.Channel()
+	if err != nil {
+		panic(err)
+	}
+	defer ch.Close()
+
+	q, err := ch.QueueDeclare(
+		"serviceApp",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = ch.Publish(
+		"",
+		q.Name,
+		false,
+		false,
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body:        mars,
+		},
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("succes publish message")
+
+	return nil
 }
 
 func (s *CreateTransactionService) CreateTransaction(ctx context.Context, req CreateTransactionRequest) (string, error) {

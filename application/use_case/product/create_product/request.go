@@ -7,12 +7,12 @@ import (
 )
 
 type CreateProductRequest struct {
-	ProductType int    `json:"product_type" form:"product_type"`
-	ShopId      int    `json:"shop_id" form:"shop_id"`
-	Name        string `json:"name" form:"name"`
-	Price       int    `json:"price" form:"price"`
-	Description string `json:"description" form:"description"`
-	Qty         int    `json:"qty" form:"qty"`
+	ProductType int    `bson:"product_type" json:"product_type" form:"product_type"`
+	ShopId      int    `bson:"shop_id" json:"shop_id" form:"shop_id"`
+	Name        string `bson:"name" json:"name" form:"name"`
+	Price       int    `bson:"price" json:"price" form:"price"`
+	Description string `bson:"description" json:"description" form:"description"`
+	Qty         int    `bson:"qty" json:"qty" form:"qty"`
 }
 
 func ValidateRequest(req *CreateProductRequest) (bool, error) {

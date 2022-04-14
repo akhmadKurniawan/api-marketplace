@@ -57,6 +57,6 @@ func (s *UpdateUserService) UpdateUser(ctx context.Context, req UpdateUserReques
 		return nil, err
 	}
 
-	return &Response{User: res}, nil
+	return &Response{User: *res}, nil
 
 }

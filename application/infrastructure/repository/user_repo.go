@@ -44,7 +44,7 @@ func (repo *UserRepository) SignUpUser(ctx context.Context, user models.User) (m
 
 }
 
-func (repo *UserRepository) GetUserID(ctx context.Context, id string) (models.User, error) {
+func (repo *UserRepository) GetUserID(ctx context.Context, id string) (*models.User, error) {
 	db := repo.DB.Debug()
 
 	user := models.User{}
@@ -53,9 +53,9 @@ func (repo *UserRepository) GetUserID(ctx context.Context, id string) (models.Us
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			log.Println("Repository - GetUserID Error : ", err)
 		}
-		return user, err
+		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
 func (repo *UserRepository) GetUsername(ctx context.Context, username string) (models.User, error) {

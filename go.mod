@@ -15,10 +15,12 @@ require (
 	github.com/refactory-id/go-core-package v0.0.0-20200316075239-46b5fae45155
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.26.1
+	github.com/streadway/amqp v1.0.0
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.4.1
 	github.com/swaggo/swag v1.8.0
 	github.com/xendit/xendit-go v1.0.6
+	go.mongodb.org/mongo-driver v1.8.4
 	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58
 	gorm.io/driver/mysql v1.3.2
 	gorm.io/gorm v1.23.1
@@ -59,7 +61,6 @@ require (
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.mongodb.org/mongo-driver v1.8.4 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5 // indirect

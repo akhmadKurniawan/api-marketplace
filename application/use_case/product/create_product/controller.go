@@ -47,7 +47,7 @@ func (h *CreateProductHandler) CreateProduct(c *gin.Context) {
 	errCreate := h.productService.CreateProduct(ctx, req, file.FileUrl)
 	if errCreate != nil {
 		log.Println("Controller - CreateProduct error while access service : ", errCreate)
-		c.JSON(500, response.SetMessage(errCreate.Error(), false))
+		c.JSON(400, response.SetMessage(errCreate.Error(), false))
 		return
 	}
 

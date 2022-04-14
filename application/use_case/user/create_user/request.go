@@ -7,6 +7,7 @@ import (
 )
 
 type CreateUserRequest struct {
+	ID       int    `gorm:"primary_key" json:"id"`
 	Email    string `json:"email" validate:"required,email"`
 	Username string `json:"username" validate:"required,min=5"`
 	Password string `json:"password" validate:"required,min=8"`
@@ -45,6 +46,7 @@ func RequestMappers(req CreateUserRequest, id int) (models.Seller, models.Costum
 
 func RequestMapper(req CreateUserRequest, password, status string) models.User {
 	reqUser := models.User{
+		ID:       req.ID,
 		Email:    req.Email,
 		Username: req.Username,
 		Password: password,

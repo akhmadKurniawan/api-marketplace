@@ -155,6 +155,7 @@ func TransactionRoutes(route *gin.RouterGroup, db *gorm.DB, mdb *mongo.Database)
 	{
 		v1.GET("", getHandler.ShowTransaction)
 		v1.POST("", crHandler.CreateTransaction)
+		v1.POST("/rabbit", crHandler.CreateRabbitMQ)
 		v1.POST("/:id", upHandler.UpdateTransaction)
 	}
 }

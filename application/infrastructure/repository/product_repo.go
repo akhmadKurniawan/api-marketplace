@@ -11,20 +11,20 @@ import (
 )
 
 type ProductRepository struct {
-	DB         *gorm.DB
-	Collection *mongo.Collection
+	DB  *gorm.DB
+	DBM *mongo.Database
 }
 
-func NewProductRepository(db *gorm.DB, dmb *mongo.Database) infrastructure.ProductRepository {
+func NewProductRepository(db *gorm.DB, dbm *mongo.Database) infrastructure.ProductRepository {
 	return &ProductRepository{
-		DB:         db,
-		Collection: dmb.Collection("products"),
+		DB:  db,
+		DBM: dbm,
 	}
 }
 
 func (repo *ProductRepository) CreateProduct(ctx context.Context, product models.Product) error {
 	db := repo.DB
-	dbm := repo.Collection
+	dbm := repo.DBM.Collection("products")
 
 	go func() {
 		_, err := dbm.InsertOne(ctx, product)

@@ -4,6 +4,8 @@ import (
 	"app/application/infrastructure"
 	"app/middleware"
 	"context"
+	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -30,7 +32,12 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 	// get username
 	user, errUser := s.userRepository.GetAllUsername(ctx, req.Username)
 	if errUser != nil {
-		log.Error().Err(errUser).Msg("Service - Login error while access username")
+		log.Debug().
+			Str("Func", "LoginUser").
+			Str("Usernam", "LoginUser").
+			Interface("Request", req).
+			Msg("Service - Login error while access username")
+		errUser = errors.New("Service - Login error while access username")
 		return nil, errUser
 	}
 	byteDBPass := []byte(user.Password)
@@ -50,26 +57,33 @@ func (s *LoginService) LoginUser(ctx context.Context, req LoginRequest) (*Respon
 		log.Error().Err(err).Msg("Service - Signed Token error")
 		return nil, err
 	}
-	_, errLogin := s.loginRepository.Login(ctx, RequestMapper(user.ID, signed), user.ID)
+	tes, errLogin := s.loginRepository.Login(ctx, RequestMapper(user.ID, signed), user.ID)
 	if errLogin != nil {
 		log.Error().Err(errLogin).Msg("Service - Login error")
 		return nil, errLogin
 	}
+	fmt.Println(tes)
 
 	userId := strconv.FormatUint(uint64(user.ID), 10)
 
 	//Get user By Id
 	userData, errGetUser := s.userRepository.GetUserID(ctx, userId)
 	if errGetUser != nil {
-		log.Error().Err(errGetUser).Msg("Service - GetUserID error")
+		log.Debug().
+			Str("Func", "LoginUser").
+			Str("UserID", "LoginUser").
+			Interface("Request", req).
+			Msg("Service - GetUserID error")
+		errGetUser = errors.New("Service - GetUserID error")
 		return nil, errGetUser
 	}
-	if errGetUser != nil || userData.Status == "Inactivated" {
-		// errGetUser = errors.New("please activate your account")
-		log.Error().Err(errUser).Msg("please activate your account")
-		return nil, errUser
-	}
+	// fmt.Println("atas")
+	// if errGetUser != nil || userData != nil || userData.Status == "Inactivated" {
+	// 	log.Error().Err(errUser).Msg("please activate your account")
+	// 	return nil, errUser
+	// }
+	// fmt.Println("bawah")
 
-	return &Response{User: userData}, nil
+	return &Response{User: *userData}, nil
 
 }

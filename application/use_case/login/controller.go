@@ -36,7 +36,7 @@ func (h *LoginHandler) Login(c *gin.Context) {
 	req := LoginRequest{}
 	if err := c.Bind(&req); err != nil {
 		log.Println("Controller - Login error while binding request to json :", err)
-		c.JSON(500, response.SetMessage(err.Error(), false))
+		c.JSON(400, response.SetMessage(err.Error(), false))
 		return
 	}
 
@@ -49,7 +49,7 @@ func (h *LoginHandler) Login(c *gin.Context) {
 	res, err := h.loginService.LoginUser(c.Request.Context(), req)
 	if err != nil {
 		log.Println("Controller - Login error while accessing service :", err)
-		c.JSON(http.StatusInternalServerError, response.SetMessage(err.Error(), false))
+		c.JSON(400, response.SetMessage(err.Error(), false))
 		return
 	}
 
